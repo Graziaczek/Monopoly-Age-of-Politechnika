@@ -28,7 +28,6 @@ int main() {
 		window.clear(Color::Black);
 		window.draw(tytul_s);
 		window.draw(nowagra_s);
-		if ();
 		window.display();
 	}
 	return 0;
