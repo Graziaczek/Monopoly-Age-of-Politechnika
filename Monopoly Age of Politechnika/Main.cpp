@@ -4,6 +4,20 @@
 
 using namespace sf;
 using namespace std;
+void gra() {
+	RenderWindow monopoly(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
+	monopoly.setFramerateLimit(60);
+	while (monopoly.isOpen()) {
+		Event event;
+		monopoly.clear(Color::Black);
+		monopoly.display();
+		while (monopoly.pollEvent(event)) {
+			if (event.type == Event::Closed) {
+				monopoly.close();
+			}
+		}
+	}
+}
 int main() {
 	RenderWindow window(VideoMode(1000, 1000), "Monopoly: Age of Politechnika",Style::Default);
 	window.setFramerateLimit(60);
@@ -14,10 +28,8 @@ int main() {
 	Sprite tytul_s;
 	Sprite nowagra_s;
 	tytul_s.setTexture(tytul);
-	tytul_s.setPosition(Vector2f(300,100));
 	nowagra_s.setTexture(nowagra);
 	nowagra_s.setPosition(Vector2f(375, 300));
-	nowagra_s.setScale(0.5,0.5);
 	while (window.isOpen()) {
 		Event event;
 		window.clear(Color::Black);
@@ -31,6 +43,7 @@ int main() {
 			if (nowagra_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
 				if (event.type == Event::MouseButtonPressed) {
 					window.close();
+					gra();
 				}
 			}
 		}
