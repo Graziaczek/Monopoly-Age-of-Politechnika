@@ -1,8 +1,17 @@
-﻿  klasyCzyCos.cpp
-  Main.cpp
+﻿  Main.cpp
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(31,89): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(31,68): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
   Trwa generowanie kodu
-  0 of 72 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  2 of 75 functions ( 2.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Monopoly Age of Politechnika.vcxproj -> D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Release\Monopoly Age of Politechnika.exe
