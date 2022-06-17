@@ -1,18 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <iostream>
+#include "Nag³ówek.h"
 
 using namespace sf;
 using namespace std;
+//Gracz g1;
+//Gracz g2;
 void gra() {
 	RenderWindow monopoly_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
 	monopoly_w.setFramerateLimit(60);
-	Texture plansza, bos, strefastudenta, start, wezwanie, ms_inf, ms_mat, aei_air, aei_inf, e_mech, e_energetyka, e_inf, alo_rybnik, alo_gliwice;
+
+	Texture plansza, bos, strefastudenta, start, wezwanie, ms_inf, ms_mat, aei_air, aei_inf, e_mech, e_energetyka, e_inf, mt_mechibud, mt_inzmat, mt_zarziinzprod, budo_budownictwo, budo_budopodz, budo_zarziinzprod, arch_architektura, arch_archiwnetrz, trans_logistyka, trans_transprzemyslowy, gorn_gornigeo, gorn_inzbezp, chem_chemia, chem_biotech, chem_techchem, piast, karlik, solaris, elektron, impreza, afterek, alo_rybnik, alo_gliwice, dzien_rektorski;
 	plansza.loadFromFile("plansza.jpg");
+
 	bos.loadFromFile("bos.jpg");
 	strefastudenta.loadFromFile("strefa_studenta.jpg");
 	start.loadFromFile("start.jpg");
 	wezwanie.loadFromFile("wezwanie.jpg");
+	
 	ms_inf.loadFromFile("ms_inf.jpg");
 	ms_mat.loadFromFile("ms_mat.jpg");
 	aei_air.loadFromFile("aei_air.jpg");
@@ -20,11 +25,38 @@ void gra() {
 	e_mech.loadFromFile("e_mech.jpg");
 	e_energetyka.loadFromFile("e_energetyka.jpg");
 	e_inf.loadFromFile("e_inf.jpg");
+	mt_mechibud.loadFromFile("mt_mechibud.jpg");
+	mt_inzmat.loadFromFile("mt_in¿mat.jpg");
+	mt_zarziinzprod.loadFromFile("mt_zarziinzprod.jpg");
+	budo_budownictwo.loadFromFile("budo_budownictwo.jpg");
+	budo_budopodz.loadFromFile("budo_budopodziemne.jpg");
+	budo_zarziinzprod.loadFromFile("budo_zarziinzprod.jpg");
+	arch_architektura.loadFromFile("arch_architektura.jpg");
+	arch_archiwnetrz.loadFromFile("arch_archiwnetrz.jpg");
+	trans_logistyka.loadFromFile("trans_logistyka.jpg");
+	trans_transprzemyslowy.loadFromFile("trans_transprzemyslowy.jpg");
+	gorn_gornigeo.loadFromFile("gorn_gornigeo.jpg");
+	gorn_inzbezp.loadFromFile("gorn_inzbezp.jpg");
+	chem_chemia.loadFromFile("chem_chemia.jpg");
+	chem_biotech.loadFromFile("chem_biotech.jpg");
+	chem_techchem.loadFromFile("chem_techchem.jpg");
+	
+	piast.loadFromFile("piast.jpg");
+	karlik.loadFromFile("karlik.jpg");
+	solaris.loadFromFile("solaris.jpg");
+	elektron.loadFromFile("elektron.jpg");
+	
+	impreza.loadFromFile("impreza.jpg");
+	afterek.loadFromFile("afterek.jpg");
+	
 	alo_rybnik.loadFromFile("alo_rybnik.jpg");
 	alo_gliwice.loadFromFile("alo_gliwice.jpg");
 
-	Sprite plansza_s, bos_s, strefastudenta_s, start_s, wezwanie_s, ms_inf_s, ms_mat_s, aei_air_s, aei_inf_s, e_mech_s, e_energetyka_s, e_inf_s, alo_rybnik_s, alo_gliwice_s;
+	dzien_rektorski.loadFromFile("dzien_rektorski.jpg");
+
+	Sprite plansza_s, bos_s, strefastudenta_s, start_s, wezwanie_s, ms_inf_s, ms_mat_s, aei_air_s, aei_inf_s, e_mech_s, e_energetyka_s, e_inf_s, mt_mechibud_s, mt_inzmat_s, mt_zarziinzprod_s, budo_budownictwo_s, budo_budopodz_s, budo_zarziinzprod_s, arch_architektura_s, arch_archiwnetrz_s, trans_logistyka_s, trans_transprzemyslowy_s, gorn_gornigeo_s, gorn_inzbezp_s, chem_chemia_s, chem_biotech_s, chem_techchem_s, piast_s, karlik_s, solaris_s, elektron_s, impreza_s, afterek_s, alo_rybnik_s, alo_gliwice_s, dzien_rektorski_1_s, dzien_rektorski_2_s, dzien_rektorski_3_s, dzien_rektorski_4_s, dzien_rektorski_5_s, dzien_rektorski_6_s;
 	plansza_s.setTexture(plansza);
+
 	bos_s.setTexture(bos);
 	bos_s.setPosition(Vector2f(100, 671));
 	strefastudenta_s.setTexture(strefastudenta);
@@ -33,6 +65,7 @@ void gra() {
 	start_s.setPosition(Vector2f(771, 671));
 	wezwanie_s.setTexture(wezwanie);
 	wezwanie_s.setPosition(Vector2f(771, 0));
+
 	ms_inf_s.setTexture(ms_inf);
 	ms_inf_s.setPosition(Vector2f(771, 670));
 	ms_inf_s.setRotation(-90);
@@ -54,21 +87,108 @@ void gra() {
 	e_inf_s.setTexture(e_inf);
 	e_inf_s.setPosition(Vector2f(230, 671));
 	e_inf_s.setRotation(0);
+	mt_mechibud_s.setTexture(mt_mechibud);
+	mt_mechibud_s.setPosition(Vector2f(229, 611));
+	mt_mechibud_s.setRotation(90);
+	mt_inzmat_s.setTexture(mt_inzmat);
+	mt_inzmat_s.setPosition(Vector2f(229, 491));
+	mt_inzmat_s.setRotation(90);
+	mt_zarziinzprod_s.setTexture(mt_zarziinzprod);
+	mt_zarziinzprod_s.setPosition(Vector2f(229, 431));
+	mt_zarziinzprod_s.setRotation(90);
+	budo_budownictwo_s.setTexture(budo_budownictwo);
+	budo_budownictwo_s.setPosition(Vector2f(229, 311));
+	budo_budownictwo_s.setRotation(90);
+	budo_budopodz_s.setTexture(budo_budopodz);
+	budo_budopodz_s.setPosition(Vector2f(229, 191));
+	budo_budopodz_s.setRotation(90);
+	budo_zarziinzprod_s.setTexture(budo_zarziinzprod);
+	budo_zarziinzprod_s.setPosition(Vector2f(229, 130));
+	budo_zarziinzprod_s.setRotation(90);
+	arch_architektura_s.setTexture(arch_architektura);
+	arch_architektura_s.setPosition(Vector2f(230, 0));
+	arch_architektura_s.setRotation(0);
+	arch_archiwnetrz_s.setTexture(arch_archiwnetrz);
+	arch_archiwnetrz_s.setPosition(Vector2f(351, 0));
+	arch_archiwnetrz_s.setRotation(0);
+	trans_logistyka_s.setTexture(trans_logistyka);
+	trans_logistyka_s.setPosition(Vector2f(411, 0));
+	trans_logistyka_s.setRotation(0);
+	trans_transprzemyslowy_s.setTexture(trans_transprzemyslowy);
+	trans_transprzemyslowy_s.setPosition(Vector2f(531, 0));
+	trans_transprzemyslowy_s.setRotation(0);
+	gorn_gornigeo_s.setTexture(gorn_gornigeo);
+	gorn_gornigeo_s.setPosition(Vector2f(591, 0));
+	gorn_gornigeo_s.setRotation(0);
+	gorn_inzbezp_s.setTexture(gorn_inzbezp);
+	gorn_inzbezp_s.setPosition(Vector2f(711, 0));
+	gorn_inzbezp_s.setRotation(0);
+	chem_chemia_s.setTexture(chem_chemia);
+	chem_chemia_s.setPosition(Vector2f(771, 190));
+	chem_chemia_s.setRotation(-90);
+	chem_biotech_s.setTexture(chem_biotech);
+	chem_biotech_s.setPosition(Vector2f(771, 250));
+	chem_biotech_s.setRotation(-90);
+	chem_techchem_s.setTexture(chem_techchem);
+	chem_techchem_s.setPosition(Vector2f(771, 370));
+	chem_techchem_s.setRotation(-90);
+
+	piast_s.setTexture(piast);
+	piast_s.setPosition(Vector2f(471, 671));
+	piast_s.setRotation(0);
+	karlik_s.setTexture(karlik);
+	karlik_s.setPosition(Vector2f(229, 371));
+	karlik_s.setRotation(90);
+	solaris_s.setTexture(solaris);
+	solaris_s.setPosition(Vector2f(471, 0));
+	solaris_s.setRotation(0);
+	elektron_s.setTexture(elektron);
+	elektron_s.setPosition(Vector2f(771, 430));
+	elektron_s.setRotation(-90);
+
+	impreza_s.setTexture(impreza);
+	impreza_s.setPosition(Vector2f(531, 671));
+	impreza_s.setRotation(0);
+	afterek_s.setTexture(afterek);
+	afterek_s.setPosition(Vector2f(771, 610));
+	afterek_s.setRotation(-90);
+
 	alo_rybnik_s.setTexture(alo_rybnik);
 	alo_rybnik_s.setPosition(Vector2f(229, 551));
 	alo_rybnik_s.setRotation(90);
 	alo_gliwice_s.setTexture(alo_gliwice);
-	alo_gliwice_s.setPosition(Vector2f(710, 129));
-	alo_gliwice_s.setRotation(180);
+	alo_gliwice_s.setPosition(Vector2f(651, 0));
+	alo_gliwice_s.setRotation(0);
+
+	dzien_rektorski_1_s.setTexture(dzien_rektorski);
+	dzien_rektorski_1_s.setPosition(Vector2f(651, 671));
+	dzien_rektorski_1_s.setRotation(0);
+	dzien_rektorski_2_s.setTexture(dzien_rektorski);
+	dzien_rektorski_2_s.setPosition(Vector2f(351, 671));
+	dzien_rektorski_2_s.setRotation(0);
+	dzien_rektorski_3_s.setTexture(dzien_rektorski);
+	dzien_rektorski_3_s.setPosition(Vector2f(229, 251));
+	dzien_rektorski_3_s.setRotation(90);
+	dzien_rektorski_4_s.setTexture(dzien_rektorski);
+	dzien_rektorski_4_s.setPosition(Vector2f(291, 0));
+	dzien_rektorski_4_s.setRotation(0);
+	dzien_rektorski_5_s.setTexture(dzien_rektorski);
+	dzien_rektorski_5_s.setPosition(Vector2f(771, 310));
+	dzien_rektorski_5_s.setRotation(-90);
+	dzien_rektorski_6_s.setTexture(dzien_rektorski);
+	dzien_rektorski_6_s.setPosition(Vector2f(771, 490));
+	dzien_rektorski_6_s.setRotation(-90);
 
 	while (monopoly_w.isOpen()) {
 		Event event;
 		monopoly_w.clear(Color::Black);
 		monopoly_w.draw(plansza_s);
+
 		monopoly_w.draw(bos_s);
 		monopoly_w.draw(strefastudenta_s);
 		monopoly_w.draw(start_s);
 		monopoly_w.draw(wezwanie_s);
+
 		monopoly_w.draw(ms_inf_s);
 		monopoly_w.draw(ms_mat_s);
 		monopoly_w.draw(aei_air_s);
@@ -76,8 +196,39 @@ void gra() {
 		monopoly_w.draw(e_mech_s);
 		monopoly_w.draw(e_energetyka_s);
 		monopoly_w.draw(e_inf_s);
+		monopoly_w.draw(mt_mechibud_s);
+		monopoly_w.draw(mt_zarziinzprod_s);
+		monopoly_w.draw(mt_inzmat_s);
+		monopoly_w.draw(budo_budownictwo_s);
+		monopoly_w.draw(budo_budopodz_s);
+		monopoly_w.draw(budo_zarziinzprod_s);
+		monopoly_w.draw(arch_architektura_s);
+		monopoly_w.draw(arch_archiwnetrz_s);
+		monopoly_w.draw(trans_logistyka_s);
+		monopoly_w.draw(trans_transprzemyslowy_s);
+		monopoly_w.draw(gorn_gornigeo_s);
+		monopoly_w.draw(gorn_inzbezp_s);
+		monopoly_w.draw(chem_chemia_s);
+		monopoly_w.draw(chem_biotech_s);
+		monopoly_w.draw(chem_techchem_s);
+
+		monopoly_w.draw(piast_s);
+		monopoly_w.draw(karlik_s);
+		monopoly_w.draw(solaris_s);
+		monopoly_w.draw(elektron_s);
+
+		monopoly_w.draw(impreza_s);
+		monopoly_w.draw(afterek_s);
+
 		monopoly_w.draw(alo_rybnik_s);
 		monopoly_w.draw(alo_gliwice_s);
+
+		monopoly_w.draw(dzien_rektorski_1_s);
+		monopoly_w.draw(dzien_rektorski_2_s);
+		monopoly_w.draw(dzien_rektorski_3_s);
+		monopoly_w.draw(dzien_rektorski_4_s);
+		monopoly_w.draw(dzien_rektorski_5_s);
+		monopoly_w.draw(dzien_rektorski_6_s);
 
 		monopoly_w.display();
 		while (monopoly_w.pollEvent(event)) {
@@ -131,6 +282,27 @@ void wbot() {
 					wbot_w.close();
 					gra();
 				}
+			}
+		}
+	}
+}
+void whotseat() {
+	RenderWindow whotseat_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Ustawienia - Wybor Nicków", Style::Default);
+	Texture ustawienia;
+	ustawienia.loadFromFile("Ustawienia.jpg");
+	Sprite ustawienia_s;
+	ustawienia_s.setTexture(ustawienia);
+	while (whotseat_w.isOpen()) {
+		Event event;
+		whotseat_w.clear(Color::Black);
+		whotseat_w.draw(ustawienia_s);
+		whotseat_w.display();
+		while (whotseat_w.pollEvent(event)) {
+			if (event.type == Event::Closed) {
+				whotseat_w.close();
+			}
+			if (event.type == Event::KeyPressed) {
+				//g1->nick=getch();
 			}
 		}
 	}

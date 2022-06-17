@@ -1,6 +1,4 @@
-#include <string>
-#include <iostream>
-#include <random>
+#include "Nag³ówek.h"
 
 using namespace std;
 
@@ -28,10 +26,7 @@ class Kierunek				//ale nie zwrot
 	int LiczbaBudynkow = 0; //zbudowanych juz oczywiscie
 };
 
-class Gracz
-{
-	string Nick;			//Nick Fury hehe
-	unsigned long Hajs;
-	Kierunek Akty_Wlasnosci[10][3]; //10 wydzialow po 2-3 kierunki
-	int Polozenie;
-};
+//Gracz()
+//{
+//	
+//};

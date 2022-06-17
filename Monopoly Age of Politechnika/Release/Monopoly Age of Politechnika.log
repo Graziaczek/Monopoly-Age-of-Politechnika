@@ -1,60 +1,60 @@
 ﻿  Main.cpp
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(117,91): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(268,91): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(117,70): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(268,70): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(123,92): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(274,92): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(123,71): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(274,71): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(129,88): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(280,88): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(129,67): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(280,67): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(161,89): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(333,89): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(161,68): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(333,68): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(167,85): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(339,85): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(167,64): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(339,64): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(196,89): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(368,89): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(196,68): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+D:\Monopoly-Age-of-Politechnika\Monopoly Age of Politechnika\Main.cpp(368,68): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
           with
           [
               T=float
