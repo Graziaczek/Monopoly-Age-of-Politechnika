@@ -11,6 +11,11 @@ Kierunek::Kierunek(string nazwa1, int wydzial1, int koszt_zakupu1, int wartosc_s
 	Koszt_Budowy = koszt_budowy1;
 	Haracz = haracz1;
 }
+Pole::Pole(int id, int a, int b) {
+	ID = id;
+	x = a;
+	y = b;
+}
 int RNG(int a, int b)
 {
 	random_device r;
