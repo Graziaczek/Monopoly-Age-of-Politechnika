@@ -1,11 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <conio.h>
 #include "Nag³ówek.h"
 
 using namespace sf;
-using namespace std;
-//Gracz g1;
-//Gracz g2;
+Gracz g1;
+Gracz g2;
+void nazwy();
 void gra() {
 	RenderWindow monopoly_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
 	monopoly_w.setFramerateLimit(60);
@@ -268,43 +269,105 @@ void wbot() {
 			if (doktorant_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
 				if (event.type == Event::MouseButtonPressed) {
 					wbot_w.close();
-					gra();
+					g2.nick = "DOKTORANT";
+					nazwy();
 				}
 			}
 			if (prodziekan_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
 				if (event.type == Event::MouseButtonPressed) {
 					wbot_w.close();
-					gra();
+					g2.nick = "PRODZIEKAN";
+					nazwy();
 				}
 			}
 			if (rektor_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
 				if (event.type == Event::MouseButtonPressed) {
 					wbot_w.close();
-					gra();
+					g2.nick = "REKTOR";
+					nazwy();
 				}
 			}
 		}
 	}
 }
-void whotseat() {
+void nazwy() {
+	int zmiana = 0;
 	RenderWindow whotseat_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Ustawienia - Wybor Nicków", Style::Default);
-	Texture ustawienia;
+	Texture ustawienia, dalej;
 	ustawienia.loadFromFile("Ustawienia.jpg");
-	Sprite ustawienia_s;
+	dalej.loadFromFile("dalej.jpg");
+	Font nick_f, napis;
+	nick_f.loadFromFile("BITCBLKAD.ttf");
+	napis.loadFromFile("Cooper Black Regular.ttf");
+	Sprite ustawienia_s, dalej_s;
 	ustawienia_s.setTexture(ustawienia);
+	dalej_s.setTexture(dalej);
+	dalej_s.setPosition(Vector2f(600, 600));
+	Text nick1_t, nick2_t, nick_1_s, nick_2_s;
+	nick1_t.setFont(nick_f);
+	nick1_t.setFillColor(Color::Blue);
+	nick1_t.setPosition(Vector2f(100, 350));
+	nick2_t.setFont(nick_f);
+	nick2_t.setFillColor(Color::Blue);
+	nick2_t.setPosition(Vector2f(100, 450));
+	nick_1_s.setFont(napis);
+	nick_1_s.setFillColor(Color::Blue);
+	nick_1_s.setPosition(Vector2f(100, 300));
+	nick_1_s.setString("Nick 1:");
+	nick_2_s.setFont(napis);
+	nick_2_s.setFillColor(Color::Blue);
+	nick_2_s.setPosition(Vector2f(100, 400));
+	nick_2_s.setString("Nick 2:");
 	while (whotseat_w.isOpen()) {
 		Event event;
 		whotseat_w.clear(Color::Black);
+		whotseat_w.draw(nick_1_s);
+		whotseat_w.draw(nick_2_s);
 		whotseat_w.draw(ustawienia_s);
-		whotseat_w.display();
+		whotseat_w.draw(dalej_s);
 		while (whotseat_w.pollEvent(event)) {
 			if (event.type == Event::Closed) {
 				whotseat_w.close();
 			}
-			if (event.type == Event::KeyPressed) {
-				//g1->nick=getch();
+			if (event.type == Event::KeyPressed && zmiana == 0) {
+				if (event.key.code == sf::Keyboard::Return) {
+					zmiana = 1;
+					continue;
+				}
+				if (event.key.code == sf::Keyboard::LShift) {
+					continue;
+				}
+				if (event.key.code == sf::Keyboard::BackSpace && g1.nick.length() != 0) {
+					g1.nick.erase(g1.nick.length()-1,g1.nick.length());
+					continue;
+				}
+				g1.nick += char(event.key.code + 65);
+				
+			}
+			if (event.type == Event::KeyPressed && zmiana == 1) {
+				if (event.key.code == sf::Keyboard::LShift) {
+					continue;
+				}
+				if (event.key.code == sf::Keyboard::BackSpace && g2.nick.length() != 0) {
+					g2.nick.erase(g2.nick.length() - 1, g2.nick.length());
+					continue;
+				}
+				if (event.key.code == sf::Keyboard::Return) {
+					zmiana = 2;
+					continue;
+				}
+				g2.nick += char(event.key.code + 65);
+			}
+			if (dalej_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && zmiana == 2) {
+				whotseat_w.close();
+				gra();
 			}
 		}
+		nick1_t.setString(g1.nick);
+		nick2_t.setString(g2.nick);
+		whotseat_w.draw(nick1_t);
+		whotseat_w.draw(nick2_t);
+		whotseat_w.display();
 	}
 }
 void ustawienia() {
@@ -333,7 +396,7 @@ void ustawienia() {
 			if (hotseat_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
 				if (event.type == Event::MouseButtonPressed) {
 					ustawienia_w.close();
-					gra();
+					nazwy();
 				}
 			}
 			if (bot_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
