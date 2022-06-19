@@ -2,12 +2,11 @@
 
 using namespace std;
 
-Kierunek::Kierunek(string nazwa1, int wydzial1, int koszt_zakupu1, int wartosc_sprzedazy1, int naleznosc1, int koszt_budowy1, int haracz1) {
-	nazwa = nazwa1;
+Kierunek::Kierunek(int ID, string nazwa1, int wydzial1, int koszt_zakupu1, int koszt_budowy1, int haracz1) {
+	ID_pola = ID;
+	Nazwa = nazwa1;
 	Wydzial = wydzial1;
-	koszt_zakupu = koszt_zakupu1;
-	warosc_sprzedazy = wartosc_sprzedazy1;
-	naleznosc = naleznosc1;
+	Koszt_zakupu = koszt_zakupu1;
 	Koszt_Budowy = koszt_budowy1;
 	Haracz = haracz1;
 }
@@ -20,38 +19,28 @@ int RNG(int a, int b)
 {
 	random_device r;
 	mt19937 generator(r());
-	uniform_int_distribution<int> dist(a, b);
-	return dist(generator);
+	uniform_int_distribution<int> distrib(a, b);
+	return distrib(generator);
 }
-void zakup_kierunku(Gracz X, Kierunek K)
+void zakup_kierunku(Gracz* X, Kierunek* K)
 {
-	X.Hajs -= K.koszt_zakupu;
-	//X.Akty_Wlasnosci[K.Wydzial] += 1;
-	K.naleznosc = X.ID;
+	X->Hajs -= K->Koszt_zakupu;
+	K->GraczID = X->ID;
 }
 
 
-void sprzedawanie(Gracz X, Kierunek K)
+void sprzedawanie(Gracz* X, Kierunek* K)
 {
-	K.naleznosc = 0;
-	K.Haracz = 0;
-	K.LiczbaBudynkow = 0;
-	X.Hajs += K.warosc_sprzedazy;
+	K->GraczID = 0;
+	K->Haracz = 0;
+	K->LiczbaBudynkow = 0;
+	X->Hajs += K->Wartosc_sprzedazy;
 	//X.Akty_Wlasnosci[K.Wydzial] -= 1;
-	K.warosc_sprzedazy = 0;
+	K->Wartosc_sprzedazy = 0;
 }
 
-//void zaplata(Gracz Plac, Gracz Otrz, Kierunek K)
-//{
-//	if (Plac.Hajs >= K.Haracz)
-//	{
-//		Plac.Hajs -= K.Haracz;
-//		Otrz.Hajs += K.Haracz;
-//	}
-//	else
-//	{
-//		Kierunek Wybran;
-//		sprzedawanie(Plac, Wybran);
-//		zaplata(Plac, Otrz, K);
-//	}
-//}
+void zaplata(Gracz* Plac, Gracz* Otrz, Kierunek* K)
+{
+		Plac->Hajs -= K->Haracz;
+		Otrz->Hajs += K->Haracz;
+}

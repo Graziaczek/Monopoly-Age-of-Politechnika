@@ -6,22 +6,27 @@
 using namespace sf;
 Gracz gracz1;
 Gracz gracz2;
-Pole start(1, 850, 750), aei_1(2, 790, 750), dr_1(3, 730, 750), aei_2(4, 670, 750), impreza(5, 610, 750), piast(6, 550, 750), e_1(7, 490, 750), dr_2(8, 430, 750), e_2(9, 370, 750), e_3(10, 310, 750), bos(11, 180, 750), mt_1(12, 180, 690), alo_r(13, 180, 630), mt_2(14, 180, 570), mt_3(15, 180, 510), karlik(16, 180, 450), budo_1(17, 180, 390), dr_3(18, 180, 330), budo_2(19, 180, 270), budo_3(20, 180, 210), strefa(21, 180, 80), arch_1(22, 310, 80), dr_4(23, 370, 80), arch_2(24, 430, 80), trans_1(25, 490, 80), solaris(26, 550, 80), trans_2(27, 610, 80), gorn_1(28, 670, 80), alo_g(29, 730, 80), gorn_2(30, 790, 80), wezwanie(31, 850, 80), chem_1(31, 850, 210), chem_2(32, 850, 270), dr_5(33, 850, 330), chem_3(34, 850, 390), elektron(35, 850, 450), dr_6(36, 850, 510), ms_1(37, 850, 570), afterek(38, 850, 630), ms_2(39, 850, 690);
+Pole start(1, 850, 750), aei_1(2, 790, 750), dr_1(3, 730, 750), aei_2(4, 670, 750), impreza(5, 610, 750), piast(6, 550, 750), e_1(7, 490, 750), dr_2(8, 430, 750), e_2(9, 370, 750), e_3(10, 310, 750), bos(11, 150, 780), mt_1(12, 150, 620), alo_r(13, 150, 560), mt_2(14, 150, 500), mt_3(15, 150, 440), karlik(16, 150, 380), budo_1(17, 150, 320), dr_3(18, 150, 260), budo_2(19, 150, 200), budo_3(20, 150, 140), strefa(21, 150, 40), arch_1(22, 310, 40), dr_4(23, 370, 40), arch_2(24, 430, 40), trans_1(25, 490, 40), solaris(26, 550, 40), trans_2(27, 610, 40), gorn_1(28, 670, 40), alo_g(29, 730, 40), gorn_2(30, 790, 40), wezwanie(31, 850, 40), chem_1(32, 850, 150), chem_2(33, 850, 210), dr_5(34, 850, 270), chem_3(35, 850, 330), elektron(36, 850, 390), dr_6(37, 850, 450), ms_1(38, 850, 510), afterek(39, 850, 570), ms_2(40, 850, 630);
+Kierunek air_1(2, "AiR", 1, 60, 50, 2), inf_1(4, "Informatyka", 1, 60, 50, 4), mech_2(7, "Mech", 2, 100, 50, 6), energ_2(9, "Energetyka", 2, 100, 50, 6), inf_2(10, "Informatyka", 2, 120, 50, 8), mech_3(12,"Mechanika i budowa maszyn", 3, 140, 100, 10), inz_3(14,"In¿. Mat", 3, 140, 100, 10), zarz_3(15, "Zarz¹dz. i In¿. Prod.", 3, 160, 100, 12), budo_4(17, "Budownictwo", 4, 180, 100, 14), budop_4(19, "Budo. Podziemne", 4, 180, 100, 14), zarz_4(20, "Zarz¹dz. i In¿. Prod.", 4, 200, 100, 16), archi_5(22, "Architektura", 5, 220, 150, 18), archiw_5(24, "Archi. Wnêtrz", 5, 220, 150, 20), logi_6(25, "Logistyka Transportu", 6, 240, 150, 20), trans_6(27, "Trans. Przemys³owy", 6, 240, 150, 22), gig_7(28, "Górnictwo i Geologia", 7, 260, 150, 22), inzb_7(30,"In¿. Bezp.", 7, 280, 150, 24), chem_8(32, "Chemia", 8, 300, 200, 26), biotech_8(33, "Biotechnologia", 8, 300, 200, 26), tech_8(35, "Tech. Chem.", 8, 320, 200, 28), mat_9(38, "Matematyka", 9, 350, 200, 35), inf_9(40, "Informatyka", 9, 400, 200, 50);
 void nazwy();
-void turagracza(Gracz g, RenderWindow & monopoly, Sprite g_s);
+Gracz ruch(Gracz g, Gracz p, RenderWindow & monopoly);
+Gracz turagracza(Gracz g, Gracz p, RenderWindow& monopoly);
 void gra() {
 	int liczniktur = 1;
 	RenderWindow monopoly_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
 	monopoly_w.setFramerateLimit(60);
 
-	Font tura;
+	Font tura, kasa;
 	tura.loadFromFile("Cooper Black Regular.ttf");
+	kasa.loadFromFile("Cooper Black Regular.ttf");
 
-	Text tura_t;
+	Text tura_t, kasa_t;
 	tura_t.setFont(tura);
 	tura_t.setFillColor(Color::Blue);
-	tura_t.setString(gracz1.nick);
 	tura_t.setPosition(Vector2f(100, 825));
+	kasa_t.setFont(kasa);
+	kasa_t.setFillColor(Color::Blue);
+	kasa_t.setPosition(Vector2f(800, 850));
 
 	Texture plansza, bos, strefastudenta, start, wezwanie, ms_inf, ms_mat, aei_air, aei_inf, e_mech, e_energetyka, e_inf, mt_mechibud, mt_inzmat, mt_zarziinzprod, budo_budownictwo, budo_budopodz, budo_zarziinzprod, arch_architektura, arch_archiwnetrz, trans_logistyka, trans_transprzemyslowy, gorn_gornigeo, gorn_inzbezp, chem_chemia, chem_biotech, chem_techchem, piast, karlik, solaris, elektron, impreza, afterek, alo_rybnik, alo_gliwice, dzien_rektorski, koniec_tury, g1, g2;
 	plansza.loadFromFile("plansza.jpg");
@@ -71,7 +76,7 @@ void gra() {
 	g1.loadFromFile("g1.jpg");
 	g2.loadFromFile("g2.jpg");
 
-	Sprite plansza_s, bos_s, strefastudenta_s, start_s, wezwanie_s, ms_inf_s, ms_mat_s, aei_air_s, aei_inf_s, e_mech_s, e_energetyka_s, e_inf_s, mt_mechibud_s, mt_inzmat_s, mt_zarziinzprod_s, budo_budownictwo_s, budo_budopodz_s, budo_zarziinzprod_s, arch_architektura_s, arch_archiwnetrz_s, trans_logistyka_s, trans_transprzemyslowy_s, gorn_gornigeo_s, gorn_inzbezp_s, chem_chemia_s, chem_biotech_s, chem_techchem_s, piast_s, karlik_s, solaris_s, elektron_s, impreza_s, afterek_s, alo_rybnik_s, alo_gliwice_s, dzien_rektorski_1_s, dzien_rektorski_2_s, dzien_rektorski_3_s, dzien_rektorski_4_s, dzien_rektorski_5_s, dzien_rektorski_6_s, koniec_tury_s, g1_s, g2_s;
+	Sprite plansza_s, bos_s, strefastudenta_s, start_s, wezwanie_s, ms_inf_s, ms_mat_s, aei_air_s, aei_inf_s, e_mech_s, e_energetyka_s, e_inf_s, mt_mechibud_s, mt_inzmat_s, mt_zarziinzprod_s, budo_budownictwo_s, budo_budopodz_s, budo_zarziinzprod_s, arch_architektura_s, arch_archiwnetrz_s, trans_logistyka_s, trans_transprzemyslowy_s, gorn_gornigeo_s, gorn_inzbezp_s, chem_chemia_s, chem_biotech_s, chem_techchem_s, piast_s, karlik_s, solaris_s, elektron_s, impreza_s, afterek_s, alo_rybnik_s, alo_gliwice_s, dzien_rektorski_1_s, dzien_rektorski_2_s, dzien_rektorski_3_s, dzien_rektorski_4_s, dzien_rektorski_5_s, dzien_rektorski_6_s, koniec_tury_s;
 	plansza_s.setTexture(plansza);
 
 	bos_s.setTexture(bos);
@@ -197,11 +202,11 @@ void gra() {
 	dzien_rektorski_6_s.setRotation(-90);
 
 	koniec_tury_s.setTexture(koniec_tury);
-	koniec_tury_s.setPosition(Vector2f(800, 900));
-	g1_s.setTexture(g1);
-	g1_s.setPosition(Vector2f(850, 750));
-	g2_s.setTexture(g2);
-	g2_s.setPosition(Vector2f(800, 750));
+	koniec_tury_s.setPosition(Vector2f(850, 900));
+	gracz1.g_s.setTexture(g1);
+	gracz1.g_s.setPosition(Vector2f(850, 750));
+	gracz2.g_s.setTexture(g2);
+	gracz2.g_s.setPosition(Vector2f(800, 750));
 
 	while (monopoly_w.isOpen()) {
 		Event event;
@@ -255,18 +260,11 @@ void gra() {
 		monopoly_w.draw(dzien_rektorski_6_s);
 
 		monopoly_w.draw(tura_t);
+		monopoly_w.draw(kasa_t);
 		monopoly_w.draw(koniec_tury_s);
-		monopoly_w.draw(g1_s);
-		monopoly_w.draw(g2_s);
+		monopoly_w.draw(gracz1.g_s);
+		monopoly_w.draw(gracz2.g_s);
 
-		if (liczniktur % 2) {
-			turagracza(gracz2, monopoly_w, g2_s);
-		}
-		else {
-			turagracza(gracz1, monopoly_w, g1_s);
-		}
-
-		monopoly_w.display();
 		while (monopoly_w.pollEvent(event)) {
 			if (event.type == Event::Closed) {
 				monopoly_w.close();
@@ -274,13 +272,20 @@ void gra() {
 			if (koniec_tury_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
 				if (event.type == Event::MouseButtonPressed) {
 					liczniktur += 1;
-					if (liczniktur % 2 == 0)
+					if (liczniktur % 2 == 0) {
 						tura_t.setString(gracz2.nick);
-					else
+						kasa_t.setString(to_string(gracz2.Hajs));
+						gracz2 = turagracza(gracz2, gracz1, monopoly_w);
+					}
+					else {
 						tura_t.setString(gracz1.nick);
+						kasa_t.setString(to_string(gracz1.Hajs));
+						gracz1 = turagracza(gracz1, gracz2, monopoly_w);
+					}
 				}
 			}
 		}
+		monopoly_w.display();
 	}
 }
 void wbot() {
@@ -456,130 +461,269 @@ void ustawienia() {
 		}
 	}
 }
-void turagracza(Gracz g, RenderWindow & monopoly, Sprite g_s) {
+Gracz ruch(Gracz g, Gracz p, RenderWindow & monopoly) {
 	g.Polozenie+=RNG(2, 12);
-	if (g.Polozenie >= 40) {
-		g.Polozenie - 39;
+	if (g.Polozenie > 40) {
+		g.Polozenie -= 40;
 		g.Hajs += 200;
 	}
 	if (g.Polozenie == 1) {
-		g_s.setPosition(Vector2f(start.x, start.y));
+		g.g_s.setPosition(Vector2f(start.x, start.y));
 	}
 	if (g.Polozenie == 2) {
-		g_s.setPosition(Vector2f(aei_1.x, aei_1.y));
+		g.g_s.setPosition(Vector2f(aei_1.x, aei_1.y));
+		if (air_1.GraczID == 0) {
+			zakup_kierunku(&g, &air_1);
+		}
+		else {
+			zaplata(&p, &g, &air_1);
+		}
 	}
 	if (g.Polozenie == 3) {
-		g_s.setPosition(Vector2f(dr_1.x, dr_1.y));
+		g.g_s.setPosition(Vector2f(dr_1.x, dr_1.y));
 	}
 	if (g.Polozenie == 4) {
-		g_s.setPosition(Vector2f(aei_2.x, aei_2.y));
+		g.g_s.setPosition(Vector2f(aei_2.x, aei_2.y));
+		if (inf_1.GraczID == 0) {
+			zakup_kierunku(&g, &inf_1);
+		}
+		else {
+			zaplata(&p, &g, &inf_1);
+		}
 	}
 	if (g.Polozenie == 5) {
-		g_s.setPosition(Vector2f(impreza.x, impreza.y));
+		g.g_s.setPosition(Vector2f(impreza.x, impreza.y));
 	}
 	if (g.Polozenie == 6) {
-		g_s.setPosition(Vector2f(piast.x, piast.y));
+		g.g_s.setPosition(Vector2f(piast.x, piast.y));
 	}
 	if (g.Polozenie == 7) {
-		g_s.setPosition(Vector2f(e_1.x, e_1.y));
+		g.g_s.setPosition(Vector2f(e_1.x, e_1.y));
+		if (mech_2.GraczID == 0) {
+			zakup_kierunku(&g, &mech_2);
+		}
+		else {
+			zaplata(&p, &g, &mech_2);
+		}
 	}
 	if (g.Polozenie == 8) {
-		g_s.setPosition(Vector2f(dr_2.x, dr_2.y));
+		g.g_s.setPosition(Vector2f(dr_2.x, dr_2.y));
 	}
 	if (g.Polozenie == 9) {
-		g_s.setPosition(Vector2f(e_2.x, e_2.y));
+		g.g_s.setPosition(Vector2f(e_2.x, e_2.y));
+		if (energ_2.GraczID == 0) {
+			zakup_kierunku(&g, &energ_2);
+		}
+		else {
+			zaplata(&p, &g, &energ_2);
+		}
 	}
 	if (g.Polozenie == 10) {
-		g_s.setPosition(Vector2f(e_3.x, e_3.y));
+		g.g_s.setPosition(Vector2f(e_3.x, e_3.y));
+		if (inf_2.GraczID == 0) {
+			zakup_kierunku(&g, &inf_2);
+		}
+		else {
+			zaplata(&p, &g, &inf_2);
+		}
 	}
 	if (g.Polozenie == 11) {
-		g_s.setPosition(Vector2f(bos.x, bos.y));
+		g.g_s.setPosition(Vector2f(bos.x, bos.y));
 	}
 	if (g.Polozenie == 12) {
-		g_s.setPosition(Vector2f(mt_1.x, mt_1.y));
+		g.g_s.setPosition(Vector2f(mt_1.x, mt_1.y));
+		if (mech_3.GraczID == 0) {
+			zakup_kierunku(&g, &mech_3);
+		}
+		else {
+			zaplata(&p, &g, &mech_3);
+		}
 	}
 	if (g.Polozenie == 13) {
-		g_s.setPosition(Vector2f(alo_r.x, alo_r.y));
+		g.g_s.setPosition(Vector2f(alo_r.x, alo_r.y));
 	}
 	if (g.Polozenie == 14) {
-		g_s.setPosition(Vector2f(mt_2.x, mt_2.y));
+		g.g_s.setPosition(Vector2f(mt_2.x, mt_2.y));
+		if (inz_3.GraczID == 0) {
+			zakup_kierunku(&g, &inz_3);
+		}
+		else {
+			zaplata(&p, &g, &inz_3);
+		}
 	}
 	if (g.Polozenie == 15) {
-		g_s.setPosition(Vector2f(mt_3.x, mt_3.y));
+		g.g_s.setPosition(Vector2f(mt_3.x, mt_3.y));
+		if (zarz_3.GraczID == 0) {
+			zakup_kierunku(&g, &zarz_3);
+		}
+		else {
+			zaplata(&p, &g, &zarz_3);
+		}
 	}
 	if (g.Polozenie == 16) {
-		g_s.setPosition(Vector2f(karlik.x, karlik.y));
+		g.g_s.setPosition(Vector2f(karlik.x, karlik.y));
 	}
 	if (g.Polozenie == 17) {
-		g_s.setPosition(Vector2f(budo_1.x, budo_1.y));
+		g.g_s.setPosition(Vector2f(budo_1.x, budo_1.y));
+		if (budo_4.GraczID == 0) {
+			zakup_kierunku(&g, &budo_4);
+		}
+		else {
+			zaplata(&p, &g, &budo_4);
+		}
 	}
 	if (g.Polozenie == 18) {
-		g_s.setPosition(Vector2f(dr_3.x, dr_3.y));
+		g.g_s.setPosition(Vector2f(dr_3.x, dr_3.y));
 	}
 	if (g.Polozenie == 19) {
-		g_s.setPosition(Vector2f(budo_2.x, budo_2.y));
+		g.g_s.setPosition(Vector2f(budo_2.x, budo_2.y));
+		if (budop_4.GraczID == 0) {
+			zakup_kierunku(&g, &budop_4);
+		}
+		else {
+			zaplata(&p, &g, &budop_4);
+		}
 	}
 	if (g.Polozenie == 20) {
-		g_s.setPosition(Vector2f(budo_3.x, budo_3.y));
+		g.g_s.setPosition(Vector2f(budo_3.x, budo_3.y));
+		if (zarz_4.GraczID == 0) {
+			zakup_kierunku(&g, &zarz_4);
+		}
+		else {
+			zaplata(&p, &g, &zarz_4);
+		}
 	}
 	if (g.Polozenie == 21) {
-		g_s.setPosition(Vector2f(strefa.x, strefa.y));
+		g.g_s.setPosition(Vector2f(strefa.x, strefa.y));
 	}
 	if (g.Polozenie == 22) {
-		g_s.setPosition(Vector2f(arch_1.x, arch_1.y));
+		g.g_s.setPosition(Vector2f(arch_1.x, arch_1.y));
+		if (archi_5.GraczID == 0) {
+			zakup_kierunku(&g, &archi_5);
+		}
+		else {
+			zaplata(&p, &g, &archi_5);
+		}
 	}
 	if (g.Polozenie == 23) {
-		g_s.setPosition(Vector2f(dr_4.x, dr_4.y));
+		g.g_s.setPosition(Vector2f(dr_4.x, dr_4.y));
 	}
 	if (g.Polozenie == 24) {
-		g_s.setPosition(Vector2f(arch_2.x, arch_2.y));
+		g.g_s.setPosition(Vector2f(arch_2.x, arch_2.y));
+		if (archiw_5.GraczID == 0) {
+			zakup_kierunku(&g, &archiw_5);
+		}
+		else {
+			zaplata(&p, &g, &archiw_5);
+		}
 	}
 	if (g.Polozenie == 25) {
-		g_s.setPosition(Vector2f(trans_1.x, trans_1.y));
+		g.g_s.setPosition(Vector2f(trans_1.x, trans_1.y));
+		if (logi_6.GraczID == 0) {
+			zakup_kierunku(&g, &logi_6);
+		}
+		else {
+			zaplata(&p, &g, &logi_6);
+		}
 	}
 	if (g.Polozenie == 26) {
-		g_s.setPosition(Vector2f(solaris.x, solaris.y));
+		g.g_s.setPosition(Vector2f(solaris.x, solaris.y));
 	}
 	if (g.Polozenie == 27) {
-		g_s.setPosition(Vector2f(trans_2.x, trans_2.y));
+		g.g_s.setPosition(Vector2f(trans_2.x, trans_2.y));
+		if (trans_6.GraczID == 0) {
+			zakup_kierunku(&g, &trans_6);
+		}
+		else {
+			zaplata(&p, &g, &trans_6);
+		}
 	}
 	if (g.Polozenie == 28) {
-		g_s.setPosition(Vector2f(gorn_1.x, gorn_1.y));
+		g.g_s.setPosition(Vector2f(gorn_1.x, gorn_1.y));
+		if (gig_7.GraczID == 0) {
+			zakup_kierunku(&g, &gig_7);
+		}
+		else {
+			zaplata(&p, &g, &gig_7);
+		}
 	}
 	if (g.Polozenie == 29) {
-		g_s.setPosition(Vector2f(alo_g.x, alo_g.y));
+		g.g_s.setPosition(Vector2f(alo_g.x, alo_g.y));
 	}
 	if (g.Polozenie == 30) {
-		g_s.setPosition(Vector2f(gorn_2.x, gorn_2.y));
+		g.g_s.setPosition(Vector2f(gorn_2.x, gorn_2.y));
+		if (inzb_7.GraczID == 0) {
+			zakup_kierunku(&g, &inzb_7);
+		}
+		else {
+			zaplata(&p, &g, &inzb_7);
+		}
 	}
 	if (g.Polozenie == 31) {
-		g_s.setPosition(Vector2f(wezwanie.x, wezwanie.y));
+		g.g_s.setPosition(Vector2f(wezwanie.x, wezwanie.y));
 	}
 	if (g.Polozenie == 32) {
-		g_s.setPosition(Vector2f(chem_1.x, chem_1.y));
+		g.g_s.setPosition(Vector2f(chem_1.x, chem_1.y));
+		if (chem_8.GraczID == 0) {
+			zakup_kierunku(&g, &chem_8);
+		}
+		else {
+			zaplata(&p, &g, &chem_8);
+		}
 	}
 	if (g.Polozenie == 33) {
-		g_s.setPosition(Vector2f(chem_2.x, chem_2.y));
+		g.g_s.setPosition(Vector2f(chem_2.x, chem_2.y));
+		if (biotech_8.GraczID == 0) {
+			zakup_kierunku(&g, &biotech_8);
+		}
+		else {
+			zaplata(&p, &g, &biotech_8);
+		}
 	}
 	if (g.Polozenie == 34) {
-		g_s.setPosition(Vector2f(dr_5.x, dr_5.y));
+		g.g_s.setPosition(Vector2f(dr_5.x, dr_5.y));
 	}
 	if (g.Polozenie == 35) {
-		g_s.setPosition(Vector2f(chem_3.x, chem_3.y));
+		g.g_s.setPosition(Vector2f(chem_3.x, chem_3.y));
+		if (tech_8.GraczID == 0) {
+			zakup_kierunku(&g, &tech_8);
+		}
+		else {
+			zaplata(&p, &g, &tech_8);
+		}
 	}
 	if (g.Polozenie == 36) {
-		g_s.setPosition(Vector2f(elektron.x, elektron.y));
+		g.g_s.setPosition(Vector2f(elektron.x, elektron.y));
 	}
 	if (g.Polozenie == 37) {
-		g_s.setPosition(Vector2f(ms_1.x, ms_1.y));
+		g.g_s.setPosition(Vector2f(dr_6.x, dr_6.y));
 	}
 	if (g.Polozenie == 38) {
-		g_s.setPosition(Vector2f(afterek.x, afterek.y));
+		g.g_s.setPosition(Vector2f(ms_1.x, ms_1.y));
+		if (mat_9.GraczID == 0) {
+			zakup_kierunku(&g, &mat_9);
+		}
+		else {
+			zaplata(&p, &g, &mat_9);
+		}
 	}
 	if (g.Polozenie == 39) {
-		g_s.setPosition(Vector2f(ms_2.x, ms_2.y));
+		g.g_s.setPosition(Vector2f(afterek.x, afterek.y));
 	}
-	monopoly.draw(g_s);
+	if (g.Polozenie == 40) {
+		g.g_s.setPosition(Vector2f(ms_2.x, ms_2.y));
+		if (inf_9.GraczID == 0) {
+			zakup_kierunku(&g, &inf_9);
+		}
+		else {
+			zaplata(&p, &g, &inf_9);
+		}
+	}
+	return g;
+}
+Gracz turagracza(Gracz g, Gracz p, RenderWindow& monopoly) {
+	g = ruch(g, p, monopoly);
+	return g;
 }
 int main() {
 	RenderWindow menustart_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika",Style::Default);

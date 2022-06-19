@@ -3,8 +3,11 @@
 #include <string.h>
 #include <iostream>
 #include <random>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 using namespace std;
+using namespace sf;
 int RNG(int a, int b);
 class Karta
 {
@@ -24,17 +27,17 @@ public:
 class Kierunek				//ale nie zwrot
 {
 public:
-	string nazwa = "";
+	int ID_pola;
+	string Nazwa = "";
 	int Wydzial = 0;			//numer wydzialu do ktorego nalezy kierunek
-	int koszt_zakupu = 0;
-	int warosc_sprzedazy = 0;
-	int naleznosc = 0;
+	int Koszt_zakupu = 0;
+	int Wartosc_sprzedazy = 0;
 	int Koszt_Budowy = 0;
 	int Haracz = 0;
 	int LiczbaBudynkow = 0; //zbudowanych juz oczywiscie
 	bool Hotel = 0;
 	int GraczID = 0;
-	Kierunek(string nazwa1, int wydzial1, int koszt_zakupu1, int wartosc_sprzedazy1, int naleznosc1, int koszt_budowy1, int haracz1);
+	Kierunek(int ID, string nazwa1, int wydzial1, int koszt_zakupu1, int koszt_budowy1, int haracz1);
 };
 class Gracz {
 public:
@@ -46,5 +49,8 @@ public:
 	int Akty_Wlasnosci[10][3]{}; //10 wydzialow po 2-3 kierunki
 	int akademiki[4]{};
 	int alo[2]{};
+	Sprite g_s;
 	int Polozenie = 0;
 };
+void zakup_kierunku(Gracz* X, Kierunek* K);
+void zaplata(Gracz* Plac, Gracz* Otrz, Kierunek* K);
