@@ -15,6 +15,12 @@ Pole::Pole(int id, int a, int b) {
 	x = a;
 	y = b;
 }
+Akademik::Akademik(int id) {
+	ID = id;
+}
+ALO::ALO(int id) {
+	ID = id;
+}
 int RNG(int a, int b)
 {
 	random_device r;
@@ -43,4 +49,25 @@ void zaplata(Gracz* Plac, Gracz* Otrz, Kierunek* K)
 {
 		Plac->Hajs -= K->Haracz;
 		Otrz->Hajs += K->Haracz;
+}
+void zakup_akademika(Gracz* X, Akademik* A) {
+	X->Hajs -= A->KosztZakupu;
+	A->IDGracz = X->ID;
+	X->akademiki += 1;
+}
+void zakup_alo(Gracz* X, ALO* A) {
+	X->Hajs -= A->KosztZakupu;
+	A->IDGracz = X->ID;
+	X->alo += 1;
+
+}
+void zaplata_akademiki(Gracz* Plac, Gracz* Otrz, Akademik* A)
+{
+	Plac->Hajs -= A->Haracz * Otrz->akademiki;
+	Otrz->Hajs += A->Haracz * Otrz->akademiki;
+}
+void zaplata_ALO(Gracz* Plac, Gracz* Otrz, ALO* A)
+{
+	Plac->Hajs -= A->Haracz * Otrz->alo;
+	Otrz->Hajs += A->Haracz * Otrz->alo;
 }

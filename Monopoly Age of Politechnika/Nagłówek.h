@@ -9,13 +9,7 @@
 using namespace std;
 using namespace sf;
 int RNG(int a, int b);
-class Karta
-{
-public:
-	string nazwa;
-	int id;					//moze sie przyda
-	string cytat;			//jak nam sie bedzie chcialo/nudzilo
-};
+
 class Pole
 {
 public:
@@ -45,12 +39,36 @@ public:
 	int ID = 0;
 	int ilosc_domkow = 0;
 	int ilosc_hoteli = 0;
-	unsigned long Hajs = 1500;
+	long Hajs = 1500;
 	int Akty_Wlasnosci[10][3]{}; //10 wydzialow po 2-3 kierunki
-	int akademiki[4]{};
-	int alo[2]{};
+	int akademiki = 0;
+	int alo = 0;
 	Sprite g_s;
+	Sprite kart_s;
 	int Polozenie = 0;
+	bool wyjscie = 0;
+};
+class Akademik
+{
+public:
+	int ID;					//zamiast nazwy wystarczy ID w sumie
+	int IDGracz = 0;
+	int Haracz = 50;
+	int KosztZakupu = 200;
+	Akademik(int id);
+};
+class ALO
+{
+public:
+	int ID;					//zamiast nazwy wystarczy ID w sumie
+	int IDGracz = 0;
+	int Haracz = 6;
+	int KosztZakupu;
+	ALO(int id);
 };
 void zakup_kierunku(Gracz* X, Kierunek* K);
 void zaplata(Gracz* Plac, Gracz* Otrz, Kierunek* K);
+void zakup_akademika(Gracz* X, Akademik* A);
+void zakup_alo(Gracz* X, ALO* A);
+void zaplata_akademiki(Gracz* Plac, Gracz* Otrz, Akademik* A);
+void zaplata_ALO(Gracz* Plac, Gracz* Otrz, ALO* A);
