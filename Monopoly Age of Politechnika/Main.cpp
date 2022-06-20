@@ -4,8 +4,8 @@
 #include "Nag³ówek.h"
 
 using namespace sf;
-Gracz gracz1;
-Gracz gracz2;
+Gracz gracz1(Color::Green);
+Gracz gracz2(Color::Red);
 Pole start(1, 850, 750), aei_1(2, 730, 750), dr_1(3, 670, 750), aei_2(4, 610, 750), impreza(5, 550, 750), piast(6, 490, 750), e_1(7, 430, 750), dr_2(8, 370, 750), e_2(9, 310, 750), e_3(10, 250, 750), bos(11, 150, 780), mt_1(12, 150, 620), alo_r(13, 150, 560), mt_2(14, 150, 500), mt_3(15, 150, 440), karlik(16, 150, 380), budo_1(17, 150, 320), dr_3(18, 150, 260), budo_2(19, 150, 200), budo_3(20, 150, 140), strefa(21, 150, 40), arch_1(22, 250, 40), dr_4(23, 310, 40), arch_2(24, 370, 40), trans_1(25, 430, 40), solaris(26, 490, 40), trans_2(27, 550, 40), gorn_1(28, 610, 40), alo_g(29, 670, 40), gorn_2(30, 730, 40), wezwanie(31, 850, 40), chem_1(32, 850, 150), chem_2(33, 850, 210), dr_5(34, 850, 270), chem_3(35, 850, 330), elektron(36, 850, 390), dr_6(37, 850, 450), ms_1(38, 850, 510), afterek(39, 850, 570), ms_2(40, 850, 630);
 Kierunek air_1(2, "AiR", 1, 60, 50, 2), inf_1(4, "Informatyka", 1, 60, 50, 4), mech_2(7, "Mech", 2, 100, 50, 6), energ_2(9, "Energetyka", 2, 100, 50, 6), inf_2(10, "Informatyka", 2, 120, 50, 8), mech_3(12,"Mechanika i budowa maszyn", 3, 140, 100, 10), inz_3(14,"In¿. Mat", 3, 140, 100, 10), zarz_3(15, "Zarz¹dz. i In¿. Prod.", 3, 160, 100, 12), budo_4(17, "Budownictwo", 4, 180, 100, 14), budop_4(19, "Budo. Podziemne", 4, 180, 100, 14), zarz_4(20, "Zarz¹dz. i In¿. Prod.", 4, 200, 100, 16), archi_5(22, "Architektura", 5, 220, 150, 18), archiw_5(24, "Archi. Wnêtrz", 5, 220, 150, 20), logi_6(25, "Logistyka Transportu", 6, 240, 150, 20), trans_6(27, "Trans. Przemys³owy", 6, 240, 150, 22), gig_7(28, "Górnictwo i Geologia", 7, 260, 150, 22), inzb_7(30,"In¿. Bezp.", 7, 280, 150, 24), chem_8(32, "Chemia", 8, 300, 200, 26), biotech_8(33, "Biotechnologia", 8, 300, 200, 26), tech_8(35, "Tech. Chem.", 8, 320, 200, 28), mat_9(38, "Matematyka", 9, 350, 200, 35), inf_9(40, "Informatyka", 9, 400, 200, 50);
 Akademik pi(6), ka(16), so(26), el(36);
@@ -34,8 +34,9 @@ void gra() {
 	kasa_t.setFillColor(Color::Blue);
 	kasa_t.setPosition(Vector2f(800, 850));
 
-	Texture plansza, bos, strefastudenta, start, wezwanie, ms_inf, ms_mat, aei_air, aei_inf, e_mech, e_energetyka, e_inf, mt_mechibud, mt_inzmat, mt_zarziinzprod, budo_budownictwo, budo_budopodz, budo_zarziinzprod, arch_architektura, arch_archiwnetrz, trans_logistyka, trans_transprzemyslowy, gorn_gornigeo, gorn_inzbezp, chem_chemia, chem_biotech, chem_techchem, piast, karlik, solaris, elektron, impreza, afterek, alo_rybnik, alo_gliwice, dzien_rektorski, koniec_tury, g1, g2, puste;
+	Texture plansza, bos, strefastudenta, start, wezwanie, ms_inf, ms_mat, aei_air, aei_inf, e_mech, e_energetyka, e_inf, mt_mechibud, mt_inzmat, mt_zarziinzprod, budo_budownictwo, budo_budopodz, budo_zarziinzprod, arch_architektura, arch_archiwnetrz, trans_logistyka, trans_transprzemyslowy, gorn_gornigeo, gorn_inzbezp, chem_chemia, chem_biotech, chem_techchem, piast, karlik, solaris, elektron, impreza, afterek, alo_rybnik, alo_gliwice, dzien_rektorski, koniec_tury, g1, g2, puste, color;
 	plansza.loadFromFile("plansza.jpg");
+	color.loadFromFile("kolor.jpg");
 
 	bos.loadFromFile("bos.jpg");
 	strefastudenta.loadFromFile("strefa_studenta.jpg");
@@ -98,69 +99,135 @@ void gra() {
 	ms_inf_s.setTexture(ms_inf);
 	ms_inf_s.setPosition(Vector2f(771, 670));
 	ms_inf_s.setRotation(-90);
+	inf_9.kolor.setTexture(color);
+	inf_9.kolor.setPosition(Vector2f(900, 670));
+	inf_9.kolor.setRotation(-90);
 	ms_mat_s.setTexture(ms_mat);
 	ms_mat_s.setPosition(Vector2f(771, 550));
 	ms_mat_s.setRotation(-90);
+	mat_9.kolor.setTexture(color);
+	mat_9.kolor.setPosition(Vector2f(900, 550));
+	mat_9.kolor.setRotation(-90);
 	aei_air_s.setTexture(aei_air);
 	aei_air_s.setPosition(Vector2f(711, 671));
 	aei_air_s.setRotation(0);
+	air_1.kolor.setTexture(color);
+	air_1.kolor.setPosition(Vector2f(711, 800));
+	air_1.kolor.setRotation(0);
 	aei_inf_s.setTexture(aei_inf);
 	aei_inf_s.setPosition(Vector2f(591, 671));
 	aei_inf_s.setRotation(0);
+	inf_1.kolor.setTexture(color);
+	inf_1.kolor.setPosition(Vector2f(591, 800));
+	inf_1.kolor.setRotation(0);
 	e_mech_s.setTexture(e_mech);
 	e_mech_s.setPosition(Vector2f(411, 671));
 	e_mech_s.setRotation(0);
+	mech_2.kolor.setTexture(color);
+	mech_2.kolor.setPosition(Vector2f(411, 800));
+	mech_2.kolor.setRotation(0);
 	e_energetyka_s.setTexture(e_energetyka);
 	e_energetyka_s.setPosition(Vector2f(291, 671));
 	e_energetyka_s.setRotation(0);
+	energ_2.kolor.setTexture(color);
+	energ_2.kolor.setPosition(Vector2f(291, 800));
+	energ_2.kolor.setRotation(0);
 	e_inf_s.setTexture(e_inf);
 	e_inf_s.setPosition(Vector2f(230, 671));
 	e_inf_s.setRotation(0);
+	inf_2.kolor.setTexture(color);
+	inf_2.kolor.setPosition(Vector2f(230, 800));
+	inf_2.kolor.setRotation(0);
 	mt_mechibud_s.setTexture(mt_mechibud);
 	mt_mechibud_s.setPosition(Vector2f(229, 611));
 	mt_mechibud_s.setRotation(90);
+	mech_3.kolor.setTexture(color);
+	mech_3.kolor.setPosition(Vector2f(100, 611));
+	mech_3.kolor.setRotation(90);
 	mt_inzmat_s.setTexture(mt_inzmat);
 	mt_inzmat_s.setPosition(Vector2f(229, 491));
 	mt_inzmat_s.setRotation(90);
+	inz_3.kolor.setTexture(color);
+	inz_3.kolor.setPosition(Vector2f(100, 491));
+	inz_3.kolor.setRotation(90);
 	mt_zarziinzprod_s.setTexture(mt_zarziinzprod);
 	mt_zarziinzprod_s.setPosition(Vector2f(229, 431));
 	mt_zarziinzprod_s.setRotation(90);
+	zarz_3.kolor.setTexture(color);
+	zarz_3.kolor.setPosition(Vector2f(100, 431));
+	zarz_3.kolor.setRotation(90);
 	budo_budownictwo_s.setTexture(budo_budownictwo);
 	budo_budownictwo_s.setPosition(Vector2f(229, 311));
 	budo_budownictwo_s.setRotation(90);
+	budo_4.kolor.setTexture(color);
+	budo_4.kolor.setPosition(Vector2f(100, 311));
+	budo_4.kolor.setRotation(90);
 	budo_budopodz_s.setTexture(budo_budopodz);
 	budo_budopodz_s.setPosition(Vector2f(229, 191));
 	budo_budopodz_s.setRotation(90);
+	budop_4.kolor.setTexture(color);
+	budop_4.kolor.setPosition(Vector2f(100, 191));
+	budop_4.kolor.setRotation(90);
 	budo_zarziinzprod_s.setTexture(budo_zarziinzprod);
 	budo_zarziinzprod_s.setPosition(Vector2f(229, 130));
 	budo_zarziinzprod_s.setRotation(90);
+	zarz_4.kolor.setTexture(color);
+	zarz_4.kolor.setPosition(Vector2f(100, 130));
+	zarz_4.kolor.setRotation(90);
 	arch_architektura_s.setTexture(arch_architektura);
 	arch_architektura_s.setPosition(Vector2f(230, 0));
 	arch_architektura_s.setRotation(0);
+	archi_5.kolor.setTexture(color);
+	archi_5.kolor.setPosition(Vector2f(230, 60));
+	archi_5.kolor.setRotation(0);
 	arch_archiwnetrz_s.setTexture(arch_archiwnetrz);
 	arch_archiwnetrz_s.setPosition(Vector2f(351, 0));
 	arch_archiwnetrz_s.setRotation(0);
+	archiw_5.kolor.setTexture(color);
+	archiw_5.kolor.setPosition(Vector2f(351, 60));
+	archiw_5.kolor.setRotation(0);
 	trans_logistyka_s.setTexture(trans_logistyka);
 	trans_logistyka_s.setPosition(Vector2f(411, 0));
 	trans_logistyka_s.setRotation(0);
+	logi_6.kolor.setTexture(color);
+	logi_6.kolor.setPosition(Vector2f(411, 60));
+	logi_6.kolor.setRotation(0);
 	trans_transprzemyslowy_s.setTexture(trans_transprzemyslowy);
 	trans_transprzemyslowy_s.setPosition(Vector2f(531, 0));
 	trans_transprzemyslowy_s.setRotation(0);
+	trans_6.kolor.setTexture(color);
+	trans_6.kolor.setPosition(Vector2f(531, 60));
+	trans_6.kolor.setRotation(0);
 	gorn_gornigeo_s.setTexture(gorn_gornigeo);
 	gorn_gornigeo_s.setPosition(Vector2f(591, 0));
 	gorn_gornigeo_s.setRotation(0);
+	gig_7.kolor.setTexture(color);
+	gig_7.kolor.setPosition(Vector2f(591, 60));
+	gig_7.kolor.setRotation(0);
 	gorn_inzbezp_s.setTexture(gorn_inzbezp);
 	gorn_inzbezp_s.setPosition(Vector2f(711, 0));
 	gorn_inzbezp_s.setRotation(0);
+	inzb_7.kolor.setTexture(color);
+	inzb_7.kolor.setPosition(Vector2f(711, 60));
+	inzb_7.kolor.setRotation(0);
 	chem_chemia_s.setTexture(chem_chemia);
 	chem_chemia_s.setPosition(Vector2f(771, 190));
 	chem_chemia_s.setRotation(-90);
+	chem_8.kolor.setTexture(color);
+	chem_8.kolor.setPosition(Vector2f(900, 190));
+	chem_8.kolor.setRotation(-90);
 	chem_biotech_s.setTexture(chem_biotech);
 	chem_biotech_s.setPosition(Vector2f(771, 250));
 	chem_biotech_s.setRotation(-90);
+	biotech_8.kolor.setTexture(color);
+	biotech_8.kolor.setPosition(Vector2f(900, 250));
+	biotech_8.kolor.setRotation(-90);
 	chem_techchem_s.setTexture(chem_techchem);
 	chem_techchem_s.setPosition(Vector2f(771, 370));
 	chem_techchem_s.setRotation(-90);
+	tech_8.kolor.setTexture(color);
+	tech_8.kolor.setPosition(Vector2f(900, 370));
+	tech_8.kolor.setRotation(-90);
 
 	piast_s.setTexture(piast);
 	piast_s.setPosition(Vector2f(471, 671));
@@ -248,6 +315,29 @@ void gra() {
 		monopoly_w.draw(chem_biotech_s);
 		monopoly_w.draw(chem_techchem_s);
 
+		monopoly_w.draw(air_1.kolor);
+		monopoly_w.draw(inf_1.kolor);
+		monopoly_w.draw(mech_2.kolor);
+		monopoly_w.draw(energ_2.kolor);
+		monopoly_w.draw(inf_2.kolor);
+		monopoly_w.draw(mech_3.kolor);
+		monopoly_w.draw(zarz_3.kolor);
+		monopoly_w.draw(inz_3.kolor);
+		monopoly_w.draw(budo_4.kolor);
+		monopoly_w.draw(budop_4.kolor);
+		monopoly_w.draw(zarz_4.kolor);
+		monopoly_w.draw(archi_5.kolor);
+		monopoly_w.draw(archiw_5.kolor);
+		monopoly_w.draw(logi_6.kolor);
+		monopoly_w.draw(trans_6.kolor);
+		monopoly_w.draw(gig_7.kolor);
+		monopoly_w.draw(inzb_7.kolor);
+		monopoly_w.draw(chem_8.kolor);
+		monopoly_w.draw(biotech_8.kolor);
+		monopoly_w.draw(tech_8.kolor);
+		monopoly_w.draw(mat_9.kolor);
+		monopoly_w.draw(inf_9.kolor);
+
 		monopoly_w.draw(piast_s);
 		monopoly_w.draw(karlik_s);
 		monopoly_w.draw(solaris_s);
@@ -273,11 +363,9 @@ void gra() {
 		monopoly_w.draw(gracz2.g_s);
 		if (liczniktur % 2 == 0) {
 			monopoly_w.draw(gracz2.kart_s);
-			gracz1.kart_s.setScale(Vector2f(0.0001,0.0001));
 		}
 		else {
 			monopoly_w.draw(gracz1.kart_s);
-			gracz2.kart_s.setScale(Vector2f(0.0001, 0.0001));
 		}
 		while (monopoly_w.pollEvent(event)) {
 			if (event.type == Event::Closed) {
@@ -297,6 +385,16 @@ void gra() {
 						gracz1 = turagracza(gracz1, gracz2, monopoly_w);
 					}
 					
+				}
+			}
+			if (gracz1.kart_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (event.type == Event::MouseButtonPressed) {
+					gracz1.kart_s.setScale(Vector2f(0.0001, 0.0001));
+				}
+			}
+			if (gracz2.kart_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (event.type == Event::MouseButtonPressed) {
+					gracz2.kart_s.setScale(Vector2f(0.0001, 0.0001));
 				}
 			}
 		}

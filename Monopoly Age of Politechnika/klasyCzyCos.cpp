@@ -21,6 +21,9 @@ Akademik::Akademik(int id) {
 ALO::ALO(int id) {
 	ID = id;
 }
+Gracz::Gracz(Color k) {
+	c = k;
+}
 int RNG(int a, int b)
 {
 	random_device r;
@@ -32,6 +35,7 @@ void zakup_kierunku(Gracz* X, Kierunek* K)
 {
 	X->Hajs -= K->Koszt_zakupu;
 	K->GraczID = X->ID;
+	K->kolor.setColor(X->c);
 }
 
 
@@ -54,11 +58,13 @@ void zakup_akademika(Gracz* X, Akademik* A) {
 	X->Hajs -= A->KosztZakupu;
 	A->IDGracz = X->ID;
 	X->akademiki += 1;
+	A->kolor.setColor(X->c);
 }
 void zakup_alo(Gracz* X, ALO* A) {
 	X->Hajs -= A->KosztZakupu;
 	A->IDGracz = X->ID;
 	X->alo += 1;
+	A->kolor.setColor(X->c);
 
 }
 void zaplata_akademiki(Gracz* Plac, Gracz* Otrz, Akademik* A)

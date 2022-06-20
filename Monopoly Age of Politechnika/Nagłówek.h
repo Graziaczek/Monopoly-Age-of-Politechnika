@@ -31,6 +31,8 @@ public:
 	int LiczbaBudynkow = 0; //zbudowanych juz oczywiscie
 	bool Hotel = 0;
 	int GraczID = 0;
+	Sprite kolor;
+
 	Kierunek(int ID, string nazwa1, int wydzial1, int koszt_zakupu1, int koszt_budowy1, int haracz1);
 };
 class Gracz {
@@ -45,8 +47,10 @@ public:
 	int alo = 0;
 	Sprite g_s;
 	Sprite kart_s;
+	Color c;
 	int Polozenie = 0;
 	bool wyjscie = 0;
+	Gracz(Color k);
 };
 class Akademik
 {
@@ -55,6 +59,8 @@ public:
 	int IDGracz = 0;
 	int Haracz = 50;
 	int KosztZakupu = 200;
+	Sprite kolor;
+
 	Akademik(int id);
 };
 class ALO
@@ -64,6 +70,8 @@ public:
 	int IDGracz = 0;
 	int Haracz = 6;
 	int KosztZakupu;
+	Sprite kolor;
+
 	ALO(int id);
 };
 void zakup_kierunku(Gracz* X, Kierunek* K);
