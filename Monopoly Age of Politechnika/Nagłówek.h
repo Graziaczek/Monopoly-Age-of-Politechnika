@@ -33,6 +33,7 @@ public:
 	bool Hotel = 0;
 	int GraczID = 0;
 	Sprite kolor;
+	Sprite d1, d2, d3, d4;
 
 	Kierunek(int ID, string nazwa1, int wydzial1, int lkw, int koszt_zakupu1, int koszt_budowy1, int haracz1);
 };
@@ -40,6 +41,7 @@ class Gracz {
 public:
 	string nick ="";			//Nick Fury hehe
 	bool n = 0;
+	int wiêzienie = 0;
 	int ID = 0;
 	int ilosc_domkow = 0;
 	int ilosc_hoteli = 0;
