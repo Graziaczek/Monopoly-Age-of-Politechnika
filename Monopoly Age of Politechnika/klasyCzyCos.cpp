@@ -2,10 +2,11 @@
 
 using namespace std;
 
-Kierunek::Kierunek(int ID, string nazwa1, int wydzial1, int koszt_zakupu1, int koszt_budowy1, int haracz1) {
+Kierunek::Kierunek(int ID, string nazwa1, int wydzial1, int lkw, int koszt_zakupu1, int koszt_budowy1, int haracz1) {
 	ID_pola = ID;
 	Nazwa = nazwa1;
 	Wydzial = wydzial1;
+	LKW = lkw;
 	Koszt_zakupu = koszt_zakupu1;
 	Koszt_Budowy = koszt_budowy1;
 	Haracz = haracz1;
@@ -21,8 +22,34 @@ Akademik::Akademik(int id) {
 ALO::ALO(int id) {
 	ID = id;
 }
-Gracz::Gracz(Color k) {
+Gracz::Gracz(int id, Color k) {
+	ID = id;
 	c = k;
+}
+void zakup_budynek(Gracz* X, Kierunek* K, int ile)
+{
+	if (X->Akty_Wlasnosci[4] == 2)
+	{
+		X->Hajs -= (K->Koszt_Budowy * ile * 0,9);
+		K->Wartosc_sprzedazy += (K->Koszt_Budowy * ile * 0,45);
+	}
+	else
+	{
+		X->Hajs -= (K->Koszt_Budowy * ile);
+		K->Wartosc_sprzedazy += (K->Koszt_Budowy * ile * 0, 5);
+	}
+	if (K->LiczbaBudynkow + ile == 5)
+	{
+		X->ilosc_domkow -= K->LiczbaBudynkow;
+		K->LiczbaBudynkow = 0;
+		K->Hotel = true;
+		X->ilosc_hoteli += 1;
+	}
+	else
+	{
+		K->LiczbaBudynkow += ile;
+		X->ilosc_domkow += ile;
+	}
 }
 int RNG(int a, int b)
 {
@@ -34,6 +61,7 @@ int RNG(int a, int b)
 void zakup_kierunku(Gracz* X, Kierunek* K)
 {
 	X->Hajs -= K->Koszt_zakupu;
+	X->Akty_Wlasnosci[K->Wydzial] += 1;
 	K->GraczID = X->ID;
 	K->kolor.setColor(X->c);
 }
@@ -45,7 +73,7 @@ void sprzedawanie(Gracz* X, Kierunek* K)
 	K->Haracz = 0;
 	K->LiczbaBudynkow = 0;
 	X->Hajs += K->Wartosc_sprzedazy;
-	//X.Akty_Wlasnosci[K.Wydzial] -= 1;
+	X->Akty_Wlasnosci[K->Wydzial] -= 1;
 	K->Wartosc_sprzedazy = 0;
 }
 
