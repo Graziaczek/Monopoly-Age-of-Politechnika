@@ -4,6 +4,7 @@
 #include "Nag³ówek.h"
 
 using namespace sf;
+using namespace std;
 Gracz gracz1(1, Color::Green);
 Gracz gracz2(2, Color::Red);
 Pole start(1, 850, 750), aei_1(2, 730, 750), dr_1(3, 670, 750), aei_2(4, 610, 750), impreza(5, 550, 750), piast(6, 490, 750), e_1(7, 430, 750), dr_2(8, 370, 750), e_2(9, 310, 750), e_3(10, 250, 750), bos(11, 150, 780), mt_1(12, 150, 620), alo_r(13, 150, 560), mt_2(14, 150, 500), mt_3(15, 150, 440), karlik(16, 150, 380), budo_1(17, 150, 320), dr_3(18, 150, 260), budo_2(19, 150, 200), budo_3(20, 150, 140), strefa(21, 150, 40), arch_1(22, 250, 40), dr_4(23, 310, 40), arch_2(24, 370, 40), trans_1(25, 430, 40), solaris(26, 490, 40), trans_2(27, 550, 40), gorn_1(28, 610, 40), alo_g(29, 670, 40), gorn_2(30, 730, 40), wezwanie(31, 850, 40), chem_1(32, 850, 150), chem_2(33, 850, 210), dr_5(34, 850, 270), chem_3(35, 850, 330), elektron(36, 850, 390), dr_6(37, 850, 450), ms_1(38, 850, 510), afterek(39, 850, 570), ms_2(40, 850, 630);
@@ -12,17 +13,20 @@ Akademik pi(6), ka(16), so(26), el(36);
 ALO ry(13), gl(29);
 Texture p1, p2, kup;
 Sprite p1_s, p2_s;
+int liczniktur = 1;
+int bot = 3;
 void nazwy();
-void bankrut(Gracz* g, Gracz* p, RenderWindow& monopoly);
+void bankrut(Gracz* g, Gracz* p);
 Gracz ruch(Gracz g, Gracz p, RenderWindow & monopoly);
-void loskarty(Gracz* g, Gracz* p, RenderWindow & monopoly);
+void loskarty(Gracz* g, Gracz* p);
 void zakup_budynek(Gracz* X, Gracz* Y, Kierunek* K, int ile);
 void akcja_kierunek(Gracz* X,Gracz* Y, Kierunek* K);
 void akcja_akademik(Gracz* X, Akademik* K);
 void akcja_alo(Gracz* X, ALO* K);
-void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly);
+void akcja(Gracz* g, Gracz* p);
+int przerzut(Gracz* g, int n);
+void ruchbot(Gracz* X, Gracz* Y, int IQ);
 void gra() {
-	int liczniktur = 1;
 	RenderWindow monopoly_w(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
 	monopoly_w.setFramerateLimit(60);
 
@@ -33,7 +37,7 @@ void gra() {
 	Text tura_t, kasa_t;
 	tura_t.setFont(tura);
 	tura_t.setFillColor(Color::Blue);
-	tura_t.setPosition(Vector2f(100, 825));
+	tura_t.setPosition(Vector2f(100, 850));
 	kasa_t.setFont(kasa);
 	kasa_t.setFillColor(Color::Blue);
 	kasa_t.setPosition(Vector2f(800, 850));
@@ -751,7 +755,7 @@ void gra() {
 					if (liczniktur % 2 == 0) {
 						tura_t.setString(gracz2.nick);
 						kasa_t.setString(to_string(gracz2.Hajs));
-						gracz2 = ruch(gracz2, gracz1, monopoly_w);
+						gracz2 = ruch(gracz2, gracz1, monopoly_w); //przemieszczanie gracza
 					}
 					else {
 						tura_t.setString(gracz1.nick);
@@ -759,16 +763,6 @@ void gra() {
 						gracz1 = ruch(gracz1, gracz2, monopoly_w);
 					}
 					
-				}
-			}
-			if (gracz1.kart_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
-				if (event.type == Event::MouseButtonPressed) {
-					gracz1.kart_s.setScale(Vector2f(0.0001, 0.0001));
-				}
-			}
-			if (gracz2.kart_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y)) {
-				if (event.type == Event::MouseButtonPressed) {
-					gracz2.kart_s.setScale(Vector2f(0.0001, 0.0001));
 				}
 			}
 		}
@@ -780,15 +774,22 @@ void gra() {
 		monopoly_w.display();
 		if (liczniktur % 2 == 0) {
 			monopoly_w.draw(gracz2.kart_s);
-			if (gracz2.n == 0) {
-				akcja(&gracz2, &gracz1, monopoly_w);
+			if (gracz2.n == 0&& bot == 3) {
+				akcja(&gracz2, &gracz1); //akcja gracza
+				bankrut(&gracz1, &gracz2); //sprawdzanie czy bankrut
+				gracz2.n = 1;
+			}
+			else if (gracz2.n==0&&bot != 3) {
+				ruchbot(&gracz2, &gracz1, bot);
+				bankrut(&gracz1, &gracz2);
 				gracz2.n = 1;
 			}
 		}
 		else {
 			monopoly_w.draw(gracz1.kart_s);
 			if (gracz1.n == 0) {
-				akcja(&gracz1, &gracz2, monopoly_w);
+				akcja(&gracz1, &gracz2);
+				bankrut(&gracz2, &gracz1);
 				gracz1.n = 1;
 			}
 		}
@@ -825,6 +826,7 @@ void wbot() {
 				if (event.type == Event::MouseButtonPressed) {
 					wbot_w.close();
 					gracz2.nick = "DOKTORANT";
+					bot = 0;
 					nazwy();
 				}
 			}
@@ -832,6 +834,7 @@ void wbot() {
 				if (event.type == Event::MouseButtonPressed) {
 					wbot_w.close();
 					gracz2.nick = "PRODZIEKAN";
+					bot = 1;
 					nazwy();
 				}
 			}
@@ -839,6 +842,7 @@ void wbot() {
 				if (event.type == Event::MouseButtonPressed) {
 					wbot_w.close();
 					gracz2.nick = "REKTOR";
+					bot = 2;
 					nazwy();
 				}
 			}
@@ -967,9 +971,13 @@ void ustawienia() {
 		}
 	}
 }
-void polozenie(Gracz* g, Gracz* p, RenderWindow & monopoly) {
+void polozenie(Gracz* g, Gracz* p) {
+	if (g->Akty_Wlasnosci[0]==2 && g->Polozenie == p->Polozenie) { //umiejêtnoœæ specjalna aei
+		g->Hajs += 20;
+		p->Hajs -= 20;
+	}
 	if (g->Polozenie == 1) {
-		g->g_s.setPosition(Vector2f(start.x, start.y));
+		g->g_s.setPosition(Vector2f(start.x, start.y)); //odpowiednie ustawienie sprita grcza
 	}
 	if (g->Polozenie == 2) {
 		g->g_s.setPosition(Vector2f(aei_1.x, aei_1.y));
@@ -1060,7 +1068,10 @@ void polozenie(Gracz* g, Gracz* p, RenderWindow & monopoly) {
 	}
 	if (g->Polozenie == 31) {
 		g->g_s.setPosition(Vector2f(wezwanie.x, wezwanie.y));
-		g->wiêzienie = 3;
+		if (g->Akty_Wlasnosci[7] == 3)
+			g->wiêzienie = 2;
+		else
+			g->wiêzienie = 3;
 		g->g_s.setPosition(Vector2f(bos.x - 80, bos.y));
 	}
 	if (g->Polozenie == 32) {
@@ -1091,15 +1102,15 @@ void polozenie(Gracz* g, Gracz* p, RenderWindow & monopoly) {
 		g->g_s.setPosition(Vector2f(ms_2.x, ms_2.y));
 	}
 }
-void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly) {
-	if (g->Polozenie == 2) {
+void akcja(Gracz* g, Gracz* p) {
+	if (g->Polozenie == 2) { //sprawdza jakie pole
 		if (air_1.GraczID == p->ID)
-			zaplata(g, p, &air_1);
+			zaplata(g, p, &air_1); // automatyczna op³ata
 		else
-			akcja_kierunek(g, p, &air_1);
+			akcja_kierunek(g, p, &air_1); //inne opcje
 	}
 	if (g->Polozenie == 3) {
-		loskarty(g, p, monopoly);
+		loskarty(g, p);
 	}
 	if (g->Polozenie == 4) {
 		if (inf_1.GraczID == p->ID)
@@ -1125,7 +1136,7 @@ void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly) {
 			akcja_kierunek(g, p, &mech_2);
 	}
 	if (g->Polozenie == 8) {
-		loskarty(g, p, monopoly);
+		loskarty(g, p);
 	}
 	if (g->Polozenie == 9) {
 		if (energ_2.GraczID == p->ID)
@@ -1180,7 +1191,7 @@ void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly) {
 			akcja_kierunek(g, p, &budo_4);
 	}
 	if (g->Polozenie == 18) {
-		loskarty(g, p, monopoly);
+		loskarty(g, p);
 	}
 	if (g->Polozenie == 19) {
 		if (budop_4.GraczID == p->ID)
@@ -1201,7 +1212,7 @@ void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly) {
 			akcja_kierunek(g, p, &archi_5);
 	}
 	if (g->Polozenie == 23) {
-		loskarty(g, p, monopoly);
+		loskarty(g, p);
 	}
 	if (g->Polozenie == 24) {
 		if (archiw_5.GraczID == p->ID)
@@ -1262,7 +1273,7 @@ void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly) {
 			akcja_kierunek(g, p, &biotech_8);
 	}
 	if (g->Polozenie == 34) {
-		loskarty(g, p, monopoly);
+		loskarty(g, p);
 	}
 	if (g->Polozenie == 35) {
 		if (tech_8.GraczID == p->ID)
@@ -1279,7 +1290,7 @@ void akcja(Gracz* g, Gracz* p, RenderWindow& monopoly) {
 		}
 	}
 	if (g->Polozenie == 37) {
-		loskarty(g, p, monopoly);
+		loskarty(g, p);
 	}
 	if (g->Polozenie == 38) {
 		if (mat_9.GraczID == p->ID)
@@ -1333,7 +1344,7 @@ void akcja_kierunek(Gracz* X, Gracz* Y, Kierunek* K)
 			{
 				kup_s.setScale(Vector2f(1, 1));
 				wiadomosc.setString("Czy chcesz kupic Kierunek?");
-				if ((X->Hajs >= K->Koszt_zakupu) || (X->Akty_Wlasnosci[6] == 2 && X->Hajs >= K->Koszt_zakupu * 0.8))
+				if ((X->Hajs >= K->Koszt_zakupu) || (X->Akty_Wlasnosci[6] == 2 && X->Hajs >= K->Koszt_zakupu * 0.8)) //sprawdza czy gracz mo¿e kupiæ kierunek
 				{
 					if (kup_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
 						zakup_kierunku(X, K);
@@ -1341,22 +1352,20 @@ void akcja_kierunek(Gracz* X, Gracz* Y, Kierunek* K)
 						opcje.close();
 						akcja_kierunek(X, Y, K);
 					}
-					
 				}
 				else
 				{
 					odpowiedz.setString("Nie stac Cie na zakup Kierunku.");
 				}
-
 			}
 			else
-				if (K->GraczID == X->ID && X->Akty_Wlasnosci[K->Wydzial] == K->LKW)
+				if (K->GraczID == X->ID && X->Akty_Wlasnosci[K->Wydzial-1] == K->LKW) //sprawdza czy mo¿na zakupiæ katedrê lub instytut
 				{
 					domki_s.setScale(Vector2f(1, 1));
 					wiadomosc.setString("Czy chcesz kupiæ Katedre?");
 					if (domki_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed)
 					{
-						if(X->Hajs>=K->Koszt_Budowy)
+						if (X->Hajs >= K->Koszt_Budowy)
 							if (K->LiczbaBudynkow + 1 > 5)
 							{
 								odpowiedz.setString("Brak miejsca na tyle Katedr. Masz ju¿ Instytut");
@@ -1369,6 +1378,9 @@ void akcja_kierunek(Gracz* X, Gracz* Y, Kierunek* K)
 								akcja_kierunek(X, Y, K);
 							}
 					}
+				}
+				else {
+					opcje.close();
 				}
 		}
 	}
@@ -1411,13 +1423,15 @@ void akcja_akademik(Gracz* X, Akademik* K) {
 						opcje.close();
 						akcja_akademik(X, K);
 					}
-
 				}
 				else
 				{
 					odpowiedz.setString("Nie stac Cie na zakup Akademika.");
 				}
 
+			}
+			else {
+				opcje.close();
 			}
 		}
 	}
@@ -1468,6 +1482,9 @@ void akcja_alo(Gracz* X, ALO* K) {
 				}
 
 			}
+			else {
+				opcje.close();
+			}
 		}
 	}
 }
@@ -1480,23 +1497,27 @@ void akcja_start(Gracz* X)
 	X->Hajs += 200;
 }
 Gracz ruch(Gracz g, Gracz p, RenderWindow & monopoly) {
+	int n;
 	if (g.wiêzienie != 0)
 		g.wiêzienie -= 1;
 	else {
-		g.Polozenie += RNG(2, 12);
+		 n = RNG(2, 12);
+		 n = przerzut(&g, n);
+		 g.Polozenie += n;
 		if (g.Polozenie > 40) {
 			g.Polozenie -= 40;
+			g.p = 0;
 			akcja_start(&g);
 		}
 		g.n = 0;
-		polozenie(&g, &p, monopoly);
+		polozenie(&g, &p);
 	}
 	return g;
 }
-void loskarty(Gracz* g, Gracz* p, RenderWindow & monopoly) {
+void loskarty(Gracz* g, Gracz* p) {
 	RenderWindow losk(VideoMode(468, 750), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
 	int x = RNG(1, 24);
-	Texture k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18, k19, k20, k21, k22, k23, k24, k25;
+	Texture k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16, k17, k18, k19, k20, k21, k22, k23, k24, k25, p1, p2, p3, p4;
 	k1.loadFromFile("1.jpg");
 	k2.loadFromFile("2.jpg");
 	k3.loadFromFile("25.jpg");
@@ -1522,123 +1543,317 @@ void loskarty(Gracz* g, Gracz* p, RenderWindow & monopoly) {
 	k23.loadFromFile("23.jpg");
 	k24.loadFromFile("24.jpg");
 	k25.loadFromFile("3.jpg");
+	p1.loadFromFile("ka.jpg");
+	p2.loadFromFile("el.jpg");
+	p3.loadFromFile("pi.jpg");
+	p4.loadFromFile("so.jpg");
+	Sprite p1_s, p2_s, p3_s, p4_s;
+	p1_s.setTexture(p1);
+	p2_s.setTexture(p2);
+	p3_s.setTexture(p3);
+	p4_s.setTexture(p4);
+	p1_s.setPosition(Vector2f(20, 500));
+	p2_s.setPosition(Vector2f(150, 500));
+	p3_s.setPosition(Vector2f(20, 600));
+	p4_s.setPosition(Vector2f(150, 600));
 	g->kart_s.setScale(Vector2f(1, 1));
-	switch (x) {
-	case 1:
-		g->kart_s.setTexture(k1);
-		g->Hajs -= (g->ilosc_domkow * 25 + g->ilosc_hoteli * 100);
-		break;
-	case 2:
-		g->kart_s.setTexture(k2);
-		g->Hajs -= (g->ilosc_domkow * 40 + g->ilosc_hoteli * 115);
-		break;
-	case 3:
-		g->kart_s.setTexture(k25);
-		g->Polozenie = 11;
-		break;
-	case 4:
-		g->kart_s.setTexture(k4);
-		g->Hajs += 200;
-		break;
-	case 5:
-		g->kart_s.setTexture(k5);
-		g->Hajs += 10;
-		break;
-	case 6:
-		g->kart_s.setTexture(k6);
-		g->Polozenie -= 3;
-		break;
-	case 7:
-		g->kart_s.setTexture(k7);
-		g->Polozenie = 26;
-		break;
-	case 8:
-		g->kart_s.setTexture(k8);
-		g->Polozenie = 22;
-		break;
-	case 9:
-		g->kart_s.setTexture(k9);
-		g->Polozenie = 2;
-		break;
-	case 10:
-		g->kart_s.setTexture(k10);
-		g->Polozenie = 40;
-		break;
-	case 11:
-		g->kart_s.setTexture(k11);
-		p->Hajs -= 10;
-		g->Hajs += 10;
-		break;
-	case 12:
-		g->kart_s.setTexture(k12);
-		g->Hajs += 100;
-		break;
-	case 13:
-		g->kart_s.setTexture(k13);
-		g->Hajs -= 15;
-		break;
-	case 14:
-		g->kart_s.setTexture(k14);
-		g->Hajs += 25;
-		break;
-	case 15:
-		g->kart_s.setTexture(k15);
-		g->Polozenie = 1;
-		g->Hajs += 200;
-		break;
-	case 16:
-		g->kart_s.setTexture(k16);
-		g->Hajs += 50;
-		break;
-	case 17:
-		g->kart_s.setTexture(k17);
-		g->Hajs += 150;
-		break;
-	case 18:
-		g->kart_s.setTexture(k18);
-		g->wyjscie = 1;
-		break;
-	case 19:
-		g->kart_s.setTexture(k19);
-		g->Hajs += 20;
-		break;
-	case 20:
-		g->kart_s.setTexture(k20);
-		g->Polozenie = 25;
-		break;
-	case 21:
-		g->kart_s.setTexture(k21);
-		g->Hajs -= 150;
-		break;
-	case 22:
-		g->kart_s.setTexture(k22);
-		g->Hajs -= 50;
-		break;
-	case 23:
-		g->kart_s.setTexture(k23);
-		g->Hajs -= 20;
-		break;
-	case 24:
-		g->kart_s.setTexture(k24);
-		g->Hajs -= 150;
-		break;
-	
-	}
-	while (losk.isOpen()) {
-		Event event;
-		while (losk.pollEvent(event)) {
+		switch (x) {
+		case 1:
+			g->kart_s.setTexture(k1);
+			if (g->Akty_Wlasnosci[3] == 3)
+			{
+				g->Hajs -= (g->ilosc_domkow * 20 + g->ilosc_hoteli * 90);
+			}
+			else
+				g->Hajs -= (g->ilosc_domkow * 25 + g->ilosc_hoteli * 100);
+			break;
+		case 2:
+			g->kart_s.setTexture(k2);
+			if (g->Akty_Wlasnosci[3] == 3)
+			{
+				g->Hajs -= (g->ilosc_domkow * 35 + g->ilosc_hoteli * 105);
+			}
+			else
+				g->Hajs -= (g->ilosc_domkow * 40 + g->ilosc_hoteli * 115);
+			break;
+		case 3:
+			g->kart_s.setTexture(k25);
+			if (g->Akty_Wlasnosci[6] == 2) //zgubila ci sie legitymacja studencka
+			{
+				p->Polozenie = 31;
+			}
+			g->Polozenie = 31;
+			break;
+		case 4:
+			g->kart_s.setTexture(k4);
+			g->Hajs += 200;
+			if (g->Akty_Wlasnosci[7] == 3) //panie dziekanie to na cele naukowe...
+			{
+				g->Hajs += 150;
+			}
+			break;
+		case 5:
+			g->kart_s.setTexture(k5);
+			g->Hajs += 10;
+			if (g->Akty_Wlasnosci[4] == 2) //dorabiasz sobie w maku
+			{
+				g->Hajs += 5 * (g->ilosc_domkow + g->ilosc_hoteli);
+			}
+			break;
+		case 6:
+			g->kart_s.setTexture(k6);
+			if (g->Akty_Wlasnosci[5] == 2) //czyzby kac po imprezie
+			{
+				p1.loadFromFile("+3.jpg");
+				p2.loadFromFile("-3.jpg");
+				p1_s.setScale(Vector2f(1, 1));
+				p2_s.setScale(Vector2f(1, 1));
+			}
+			else
+			{
+				g->Polozenie -= 3;
+				akcja(g, p);
+			}
+			break;
+		case 7:
+			g->kart_s.setTexture(k7);
+			if (g->Akty_Wlasnosci[1] == 3) //szykuje sie impreza w akademiku
+			{
+				p1.loadFromFile("ka.jpg");
+				p2.loadFromFile("el.jpg");
+				p3.loadFromFile("pi.jpg");
+				p4.loadFromFile("so.jpg");
+				p1_s.setScale(Vector2f(1, 1));
+				p2_s.setScale(Vector2f(1, 1));
+				p3_s.setScale(Vector2f(1, 1));
+				p4_s.setScale(Vector2f(1, 1));
+			}
+			else
+			{
+				g->Polozenie = 26;
+			}
+
+			break;
+		case 8:
+			g->kart_s.setTexture(k8);
+			g->Polozenie = 22;
+			if (g->Akty_Wlasnosci[4] == 2) //twoj artystyczny fragment duszy potrzebuje poogladac sobie sztuke
+			{
+				archi_5.Koszt_Budowy = 0;
+				zakup_budynek(g, p, &archi_5, 1);
+				archi_5.Koszt_Budowy = 150;
+			}
+			break;
+		case 9:
+			g->kart_s.setTexture(k9);
+			g->Polozenie = 2;
+			if (g->Akty_Wlasnosci[0] == 2) //potrzebujesz porady magow
+			{
+				air_1.Koszt_Budowy = 0;
+				zakup_budynek(g, p, &air_1, 1);
+				air_1.Koszt_Budowy = 50;
+			}
+			break;
+		case 10:
+			g->kart_s.setTexture(k10);
+			g->Polozenie = 40;
+			if (g->Akty_Wlasnosci[8] == 2) //musisz isc do biblioteki
+			{
+				inf_9.Koszt_Budowy = 0;
+				zakup_budynek(g, p, &inf_9, 1);
+				inf_9.Koszt_Budowy = 200;
+			}
+			break;
+		case 11:
+			g->kart_s.setTexture(k11);
+			if (g->Akty_Wlasnosci[2] == 3) //organizujesz domowke
+			{
+				g->Polozenie = 14;
+				p->Polozenie = 14;
+			}
+			else
+			{
+				p->Hajs -= 10;
+				g->Hajs += 10;
+			}
+			break;
+		case 12:
+			g->kart_s.setTexture(k12);
+			g->Hajs += 100;
+			if (g->Akty_Wlasnosci[1] == 3) //czyzby to juz poczatek miesiaca?
+			{
+				g->Hajs += 30 * g->ilosc_hoteli;
+			}
+			break;
+		case 13:
+			g->kart_s.setTexture(k13);
+			if (g->Akty_Wlasnosci[7] == 3) //znowu idziesz z ziomeczkami na piwo
+			{
+				p->Hajs -= 15;
+			}
+			else {
+				g->Hajs -= 15;
+			}
+			break;
+		case 14:
+			g->kart_s.setTexture(k14);
+			if (g->Akty_Wlasnosci[0] == 2) //udzielasz korkow z infy znajomemu z liceum
+			{
+				g->Hajs += 10 * (air_1.LiczbaBudynkow + air_1.Hotel + inf_1.LiczbaBudynkow + inf_1.Hotel);
+			}
+			else
+				g->Hajs += 25;
+			break;
+		case 15:
+			g->kart_s.setTexture(k15);
+			g->Polozenie = 1;
+			g->Hajs += 200;
+			if (g->Akty_Wlasnosci[5] == 2)
+			{
+				liczniktur -= 1;
+			}
+			break;
+		case 16:
+			g->kart_s.setTexture(k16);
+			g->Hajs += 50;
+			if (g->Akty_Wlasnosci[2] == 3) //babcia jest dumna ze udalo ci sie zaliczyc kolosa z ...
+			{
+				g->Polozenie = 21;
+				p->Polozenie = 21;
+				g->Hajs += 10;
+				p->Hajs -= 10;
+			}
+			break;
+		case 17:
+			g->kart_s.setTexture(k17);
+			g->Hajs += 150;
+			if (g->Akty_Wlasnosci[7] == 3) //znajomy oddal ci hajs za piwo
+			{
+				p->Hajs -= 20;
+				g->Hajs += 20;
+			}
+			break;
+		case 18:
+			g->kart_s.setTexture(k18);
+			g->wyjscie = 1;
+			break;
+		case 19:
+			g->kart_s.setTexture(k19);
+			g->Hajs += 20;
+			if (g->Akty_Wlasnosci[2] == 3) //oszczedzasz na jedzeniu
+			{
+				g->Hajs += 60 * g->akademiki;
+			}
+			break;
+		case 20:
+			g->kart_s.setTexture(k20);
+			g->Polozenie = 25;
+			if (g->Akty_Wlasnosci[5] == 2) //organizujesz wyjazd w gory
+			{
+				logi_6.Koszt_Budowy = 0;
+				zakup_budynek(g, p, &logi_6, 1);
+				logi_6.Koszt_Budowy = 150;
+			}
+			break;
+		case 21:
+			g->kart_s.setTexture(k21);
+			if (g->Akty_Wlasnosci[8] == 2) //ida igry, musisz zaopatrzec sie w plyny
+			{
+				p1.loadFromFile("-150.jpg");
+				p2.loadFromFile("-tura.jpg");
+				p1_s.setScale(Vector2f(1, 1));
+				p2_s.setScale(Vector2f(1, 1));
+			}
+			else
+			{
+				g->Hajs -= 150;
+			}
+
+			break;
+		case 22:
+			g->kart_s.setTexture(k22);
+			g->Hajs -= 50;
+			if (g->Akty_Wlasnosci[3] == 3) //prosisz ziomka zeby zrobil ci prace magisterska
+			{
+				g->s += 0.1;
+			}
+			break;
+		case 23:
+			g->kart_s.setTexture(k23);
+			g->Hajs -= 20;
+			if (g->Akty_Wlasnosci[6] == 2) //impreza w spirali
+			{
+				p->Polozenie = 5;
+				p->Hajs -= 200;
+
+			}
+			break;
+		case 24:
+			g->kart_s.setTexture(k24);
+			if (g->Akty_Wlasnosci[2] == 3) //kupujesz piwo na zawody we flany
+			{
+				p->Hajs -= 150;
+			}
+			else
+			{
+				g->Hajs -= 150;
+			}
+
+			break;
+
+		}
+		while (losk.isOpen()) {
+			p1_s.setScale(Vector2f(0, 0));
+			p2_s.setScale(Vector2f(0, 0));
+			p3_s.setScale(Vector2f(0, 0));
+			p4_s.setScale(Vector2f(0, 0));
+			Event event;
+			while (losk.pollEvent(event)) {
 			if (event.type == Event::Closed) {
 				losk.close();
 			}
+			if (x == 6 && g->Akty_Wlasnosci[5] == 2) {
+				if (p1_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Polozenie += 3;
+				}
+				if (p2_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Polozenie -= 3;
+				}
+			}
+			if (x == 7 && g->Akty_Wlasnosci[1] == 3) {
+				if (p1_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Polozenie = 16;
+				}
+				if (p2_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Polozenie = 36;
+				}
+				if (p1_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Polozenie = 6;
+				}
+				if (p1_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Polozenie = 26;
+				}
+			}
+			if (x == 21 && g->Akty_Wlasnosci[8] == 2) {
+				if (p1_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->Hajs -= 150;
+				}
+				if (p2_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					g->wiêzienie += 1;
+				}
+			}
 		}
 		losk.draw(g->kart_s);
+		losk.draw(p1_s);
+		losk.draw(p2_s);
+		losk.draw(p3_s);
+		losk.draw(p4_s);
 		losk.display();
 	}
-	polozenie(g, p, monopoly);
+	polozenie(g, p);
 }
-void bankrut(Gracz* g, Gracz* p, RenderWindow & monopoly) {
+void bankrut(Gracz* g, Gracz* p) {
 	if (g->Hajs <= 0) {
-		monopoly.close();
 		RenderWindow koniec(VideoMode(1000, 1000), "Monopoly: Age of Politechnika - Koniec Gry", Style::Default);
 		Font k;
 		k.loadFromFile("Cooper Black Regular.ttf");
@@ -1656,6 +1871,692 @@ void bankrut(Gracz* g, Gracz* p, RenderWindow & monopoly) {
 				}
 			}
 			koniec.display();
+		}
+	}
+}
+int przerzut(Gracz* g, int n) {
+	if (g->Akty_Wlasnosci[6] == 2 && g->p == 0) {
+		RenderWindow p(VideoMode(600, 300), "Monopoly: Age of Politechnika - Nowa Gra", Style::Default);
+		Texture opcja;
+		opcja.loadFromFile("przerzut.jpg");
+		Font czcionka;
+		czcionka.loadFromFile("Cooper Black Regular.ttf");
+		Text wiadomosc;
+		wiadomosc.setFont(czcionka);
+		wiadomosc.setFillColor(Color::Blue);
+		wiadomosc.setString(char(n) + " Przerzucasz?");
+		Sprite opcja_s;
+		opcja_s.setTexture(opcja);
+		opcja_s.setPosition(Vector2f(150, 80));
+		while (p.isOpen()) {
+			Event event;
+			p.draw(opcja_s);
+			p.draw(wiadomosc);
+			while (p.pollEvent(event)) {
+				if (event.type == Event::Closed)
+					p.close();
+				if (opcja_s.getGlobalBounds().Rect::contains(event.mouseButton.x, event.mouseButton.y) && event.type == Event::MouseButtonPressed) {
+					n = RNG(2, 12);
+					g->p = 1;
+				}
+			}
+		}
+	}
+	return n;
+}
+void ruchbot(Gracz* X, Gracz* Y, int IQ)
+{
+	int pomoc = 1;
+	for (int i = 0; i <= 21; i++)
+	{
+		if (i == 4 || i == 7 || i == 10 || i == 13 || i == 15 || i == 18 || i == 21)
+		{
+			pomoc += 1;
+		}
+		else if (i == 2 || i == 20)
+		{
+			pomoc += 3;
+		}
+		else
+			pomoc += 2;
+		if (X->Polozenie - pomoc - 1 == 0)
+		{
+			pomoc = i;
+			break;
+		}
+	}
+	if (X->wyjscie == 0)
+	{
+		if (X->Polozenie == 2) { //sprawdza jakie pole
+			if (air_1.GraczID == Y->ID)
+				zaplata(X, Y, &air_1); // automatyczna op³ata
+			else {
+				if (air_1.GraczID == 0 && (X->Hajs >= air_1.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - air_1.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - air_1.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &air_1);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * air_1.Koszt_Budowy > X->Hajs)) || (IQ == 1 && air_1.LiczbaBudynkow + i == 5) || (IQ == 2 && i * air_1.Koszt_Budowy > X->Hajs + 100) && air_1.Hotel == false)
+						{
+							zakup_budynek(X, Y, &air_1, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && air_1.LiczbaBudynkow + i == 5) && air_1.Hotel == false) || (IQ == 1 && air_1.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &air_1, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 3) {
+			loskarty(X, Y);
+		}
+		if (X->Polozenie == 4) {
+			if (inf_1.GraczID == Y->ID)
+				zaplata(X, Y, &inf_1); // automatyczna op³ata
+			else {
+				if (inf_1.GraczID == 0 && (X->Hajs >= inf_1.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - inf_1.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - inf_1.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &inf_1);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * inf_1.Koszt_Budowy > X->Hajs)) || (IQ == 1 && inf_1.LiczbaBudynkow + i == 5) || (IQ == 2 && i * inf_1.Koszt_Budowy > X->Hajs + 100) && inf_1.Hotel == false)
+						{
+							zakup_budynek(X, Y, &inf_1, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && inf_1.LiczbaBudynkow + i == 5) && inf_1.Hotel == false) || (IQ == 1 && inf_1.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &inf_1, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 5) {
+			X->Hajs -= 200;
+		}
+		if (X->Polozenie == 6) {
+			if (pi.IDGracz == Y->ID) {
+				zaplata_akademiki(X, Y, &pi);
+			}
+			else {
+				if (pi.IDGracz == 0)
+				{
+					if (pi.KosztZakupu <= X->Hajs)
+					{
+						zakup_akademika(X, &pi);
+					}
+				}
+				else
+				{
+					zaplata_akademiki(X, Y, &pi);
+				}
+			}
+		}
+		if (X->Polozenie == 7) {
+			if (mech_2.GraczID == Y->ID)
+				zaplata(X, Y, &mech_2); // automatyczna op³ata
+			else {
+				if (mech_2.GraczID == 0 && (X->Hajs >= mech_2.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - mech_2.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - mech_2.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &mech_2);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * mech_2.Koszt_Budowy > X->Hajs)) || (IQ == 1 && mech_2.LiczbaBudynkow + i == 5) || (IQ == 2 && i * mech_2.Koszt_Budowy > X->Hajs + 100) && mech_2.Hotel == false)
+						{
+							zakup_budynek(X, Y, &mech_2, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && mech_2.LiczbaBudynkow + i == 5) && mech_2.Hotel == false) || (IQ == 1 && mech_2.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &mech_2, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 8) {
+			loskarty(X, Y);
+		}
+		if (X->Polozenie == 9) {
+			if (energ_2.GraczID == Y->ID)
+				zaplata(X, Y, &energ_2); // automatyczna op³ata
+			else {
+				if (energ_2.GraczID == 0 && (X->Hajs >= energ_2.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - energ_2.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - energ_2.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &energ_2);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * energ_2.Koszt_Budowy > X->Hajs)) || (IQ == 1 && energ_2.LiczbaBudynkow + i == 5) || (IQ == 2 && i * energ_2.Koszt_Budowy > X->Hajs + 100) && energ_2.Hotel == false)
+						{
+							zakup_budynek(X, Y, &energ_2, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && energ_2.LiczbaBudynkow + i == 5) && energ_2.Hotel == false) || (IQ == 1 && energ_2.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &energ_2, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 10) {
+			if (inf_2.GraczID == Y->ID)
+				zaplata(X, Y, &inf_2); // automatyczna op³ata
+			else {
+				if (inf_2.GraczID == 0 && (X->Hajs >= inf_2.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - inf_2.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - inf_2.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &inf_2);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * inf_2.Koszt_Budowy > X->Hajs)) || (IQ == 1 && inf_2.LiczbaBudynkow + i == 5) || (IQ == 2 && i * inf_2.Koszt_Budowy > X->Hajs + 100) && inf_2.Hotel == false)
+						{
+							zakup_budynek(X, Y, &inf_2, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && inf_2.LiczbaBudynkow + i == 5) && inf_2.Hotel == false) || (IQ == 1 && inf_2.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &inf_2, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 12) {
+			if (mech_3.GraczID == Y->ID)
+				zaplata(X, Y, &mech_3); // automatyczna op³ata
+			else {
+				if (mech_3.GraczID == 0 && (X->Hajs >= mech_3.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - mech_3.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - mech_3.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &mech_3);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * mech_3.Koszt_Budowy > X->Hajs)) || (IQ == 1 && mech_3.LiczbaBudynkow + i == 5) || (IQ == 2 && i * mech_3.Koszt_Budowy > X->Hajs + 100) && mech_3.Hotel == false)
+						{
+							zakup_budynek(X, Y, &mech_3, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && mech_3.LiczbaBudynkow + i == 5) && mech_3.Hotel == false) || (IQ == 1 && mech_3.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &mech_3, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 13) {
+			if (ry.IDGracz == Y->ID) {
+				zaplata_ALO(X, Y, &ry);
+			}
+			else {
+				if (ry.IDGracz == 0)
+				{
+					if ((ry.KosztZakupu < X->Hajs && IQ == 2) || (ry.KosztZakupu * 2 < X->Hajs && IQ == 1))
+					{
+						zakup_alo(X, &ry);
+					}
+				}
+			}
+		}
+		if (X->Polozenie == 14) {
+			if (inz_3.GraczID == Y->ID)
+				zaplata(X, Y, &inz_3); // automatyczna op³ata
+			else {
+				if (inz_3.GraczID == 0 && (X->Hajs >= inz_3.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - inz_3.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - inz_3.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &inz_3);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * inz_3.Koszt_Budowy > X->Hajs)) || (IQ == 1 && inz_3.LiczbaBudynkow + i == 5) || (IQ == 2 && i * inz_3.Koszt_Budowy > X->Hajs + 100) && inz_3.Hotel == false)
+						{
+							zakup_budynek(X, Y, &inz_3, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && inz_3.LiczbaBudynkow + i == 5) && inz_3.Hotel == false) || (IQ == 1 && inz_3.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &inz_3, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 15) {
+			if (zarz_3.GraczID == Y->ID)
+				zaplata(X, Y, &zarz_3); // automatyczna op³ata
+			else {
+				if (zarz_3.GraczID == 0 && (X->Hajs >= zarz_3.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - zarz_3.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - zarz_3.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &zarz_3);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * zarz_3.Koszt_Budowy > X->Hajs)) || (IQ == 1 && zarz_3.LiczbaBudynkow + i == 5) || (IQ == 2 && i * zarz_3.Koszt_Budowy > X->Hajs + 100) && zarz_3.Hotel == false)
+						{
+							zakup_budynek(X, Y, &zarz_3, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && zarz_3.LiczbaBudynkow + i == 5) && zarz_3.Hotel == false) || (IQ == 1 && zarz_3.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &zarz_3, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 16) {
+			if (ka.IDGracz == Y->ID) {
+				zaplata_akademiki(X, Y, &ka);
+			}
+			else {
+				if (ka.IDGracz == 0)
+				{
+					if (ka.KosztZakupu <= X->Hajs)
+					{
+						zakup_akademika(X, &ka);
+					}
+				}
+				else
+				{
+					zaplata_akademiki(X, Y, &ka);
+				}
+			}
+		}
+		if (X->Polozenie == 17) {
+			if (budo_4.GraczID == Y->ID)
+				zaplata(X, Y, &budo_4); // automatyczna op³ata
+			else {
+				if (budo_4.GraczID == 0 && (X->Hajs >= budo_4.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - budo_4.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - budo_4.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &budo_4);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * budo_4.Koszt_Budowy > X->Hajs)) || (IQ == 1 && budo_4.LiczbaBudynkow + i == 5) || (IQ == 2 && i * budo_4.Koszt_Budowy > X->Hajs + 100) && budo_4.Hotel == false)
+						{
+							zakup_budynek(X, Y, &budo_4, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && budo_4.LiczbaBudynkow + i == 5) && budo_4.Hotel == false) || (IQ == 1 && budo_4.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &budo_4, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 18) {
+			loskarty(X, Y);
+		}
+		if (X->Polozenie == 19) {
+			if (budop_4.GraczID == Y->ID)
+				zaplata(X, Y, &budop_4); // automatyczna op³ata
+			else {
+				if (budop_4.GraczID == 0 && (X->Hajs >= budop_4.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - budop_4.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - budop_4.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &budop_4);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * budop_4.Koszt_Budowy > X->Hajs)) || (IQ == 1 && budop_4.LiczbaBudynkow + i == 5) || (IQ == 2 && i * budop_4.Koszt_Budowy > X->Hajs + 100) && budop_4.Hotel == false)
+						{
+							zakup_budynek(X, Y, &budop_4, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && budop_4.LiczbaBudynkow + i == 5) && budop_4.Hotel == false) || (IQ == 1 && budop_4.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &budop_4, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 20) {
+			if (zarz_4.GraczID == Y->ID)
+				zaplata(X, Y, &zarz_4); // automatyczna op³ata
+			else {
+				if (zarz_4.GraczID == 0 && (X->Hajs >= zarz_4.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - zarz_4.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - zarz_4.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &zarz_4);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * zarz_4.Koszt_Budowy > X->Hajs)) || (IQ == 1 && zarz_4.LiczbaBudynkow + i == 5) || (IQ == 2 && i * zarz_4.Koszt_Budowy > X->Hajs + 100) && zarz_4.Hotel == false)
+						{
+							zakup_budynek(X, Y, &zarz_4, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && zarz_4.LiczbaBudynkow + i == 5) && zarz_4.Hotel == false) || (IQ == 1 && zarz_4.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &zarz_4, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 22) {
+			if (archi_5.GraczID == Y->ID)
+				zaplata(X, Y, &archi_5); // automatyczna op³ata
+			else {
+				if (archi_5.GraczID == 0 && (X->Hajs >= archi_5.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - archi_5.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - archi_5.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &archi_5);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * archi_5.Koszt_Budowy > X->Hajs)) || (IQ == 1 && archi_5.LiczbaBudynkow + i == 5) || (IQ == 2 && i * archi_5.Koszt_Budowy > X->Hajs + 100) && archi_5.Hotel == false)
+						{
+							zakup_budynek(X, Y, &archi_5, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && archi_5.LiczbaBudynkow + i == 5) && archi_5.Hotel == false) || (IQ == 1 && archi_5.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &archi_5, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 23) {
+			loskarty(X, Y);
+		}
+		if (X->Polozenie == 24) {
+			if (archiw_5.GraczID == Y->ID)
+				zaplata(X, Y, &archiw_5); // automatyczna op³ata
+			else {
+				if (archiw_5.GraczID == 0 && (X->Hajs >= archiw_5.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - archiw_5.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - archiw_5.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &archiw_5);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * archiw_5.Koszt_Budowy > X->Hajs)) || (IQ == 1 && archiw_5.LiczbaBudynkow + i == 5) || (IQ == 2 && i * archiw_5.Koszt_Budowy > X->Hajs + 100) && archiw_5.Hotel == false)
+						{
+							zakup_budynek(X, Y, &archiw_5, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && archiw_5.LiczbaBudynkow + i == 5) && archiw_5.Hotel == false) || (IQ == 1 && archiw_5.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &archiw_5, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 25) {
+			if (logi_6.GraczID == Y->ID)
+				zaplata(X, Y, &logi_6); // automatyczna op³ata
+			else {
+				if (logi_6.GraczID == 0 && (X->Hajs >= logi_6.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - logi_6.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - logi_6.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &logi_6);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * logi_6.Koszt_Budowy > X->Hajs)) || (IQ == 1 && logi_6.LiczbaBudynkow + i == 5) || (IQ == 2 && i * logi_6.Koszt_Budowy > X->Hajs + 100) && logi_6.Hotel == false)
+						{
+							zakup_budynek(X, Y, &logi_6, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && logi_6.LiczbaBudynkow + i == 5) && logi_6.Hotel == false) || (IQ == 1 && logi_6.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &logi_6, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 26) {
+			if (so.IDGracz == Y->ID) {
+				zaplata_akademiki(X, Y, &so);
+			}
+			else {
+				if (so.IDGracz == 0)
+				{
+					if (so.KosztZakupu <= X->Hajs)
+					{
+						zakup_akademika(X, &so);
+					}
+				}
+				else
+				{
+					zaplata_akademiki(X, Y, &so);
+				}
+			}
+		}
+		if (X->Polozenie == 27) {
+			if (trans_6.GraczID == Y->ID)
+				zaplata(X, Y, &trans_6); // automatyczna op³ata
+			else {
+				if (trans_6.GraczID == 0 && (X->Hajs >= trans_6.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - trans_6.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - trans_6.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &trans_6);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * trans_6.Koszt_Budowy > X->Hajs)) || (IQ == 1 && trans_6.LiczbaBudynkow + i == 5) || (IQ == 2 && i * trans_6.Koszt_Budowy > X->Hajs + 100) && trans_6.Hotel == false)
+						{
+							zakup_budynek(X, Y, &trans_6, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && trans_6.LiczbaBudynkow + i == 5) && trans_6.Hotel == false) || (IQ == 1 && trans_6.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &trans_6, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 28) {
+			if (gig_7.GraczID == Y->ID)
+				zaplata(X, Y, &gig_7); // automatyczna op³ata
+			else {
+				if (gig_7.GraczID == 0 && (X->Hajs >= gig_7.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - gig_7.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - gig_7.Koszt_zakupu > 200)))) {
+					zakup_kierunku(X, &gig_7);
+				}
+				else {
+					for (int i = 1; i <= 5; i++)
+					{
+						if ((IQ == 0 && (i * gig_7.Koszt_Budowy > X->Hajs)) || (IQ == 1 && gig_7.LiczbaBudynkow + i == 5) || (IQ == 2 && i * gig_7.Koszt_Budowy > X->Hajs + 100) && gig_7.Hotel == false)
+						{
+							zakup_budynek(X, Y, &gig_7, i - 1);
+						}
+						if ((((IQ == 0 || IQ == 2) && gig_7.LiczbaBudynkow + i == 5) && gig_7.Hotel == false) || (IQ == 1 && gig_7.LiczbaBudynkow == 4 && i == 1))
+						{
+							zakup_budynek(X, Y, &gig_7, i);
+						}
+					}
+				}
+
+			}
+		}
+		if (X->Polozenie == 29) {
+			if (gl.IDGracz == Y->ID) {
+				zaplata_ALO(X, Y, &gl);
+			}
+			else {
+				if (gl.IDGracz == 0)
+				{
+					if ((gl.KosztZakupu < X->Hajs && IQ == 2) || (gl.KosztZakupu * 2 < X->Hajs && IQ == 1))
+					{
+						zakup_alo(X, &gl);
+					}
+				}
+
+				if (X->Polozenie == 30) {
+					if (inzb_7.GraczID == Y->ID)
+						zaplata(X, Y, &inzb_7); // automatyczna op³ata
+					else {
+						if (inzb_7.GraczID == 0 && (X->Hajs >= inzb_7.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - inzb_7.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - inzb_7.Koszt_zakupu > 200)))) {
+							zakup_kierunku(X, &inzb_7);
+						}
+						else {
+							for (int i = 1; i <= 5; i++)
+							{
+								if ((IQ == 0 && (i * inzb_7.Koszt_Budowy > X->Hajs)) || (IQ == 1 && inzb_7.LiczbaBudynkow + i == 5) || (IQ == 2 && i * inzb_7.Koszt_Budowy > X->Hajs + 100) && inzb_7.Hotel == false)
+								{
+									zakup_budynek(X, Y, &inzb_7, i - 1);
+								}
+								if ((((IQ == 0 || IQ == 2) && inzb_7.LiczbaBudynkow + i == 5) && inzb_7.Hotel == false) || (IQ == 1 && inzb_7.LiczbaBudynkow == 4 && i == 1))
+								{
+									zakup_budynek(X, Y, &inzb_7, i);
+								}
+							}
+						}
+
+					}
+				}
+				if (X->Polozenie == 32) {
+					if (chem_8.GraczID == Y->ID)
+						zaplata(X, Y, &chem_8); // automatyczna op³ata
+					else {
+						if (chem_8.GraczID == 0 && (X->Hajs >= chem_8.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - chem_8.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - chem_8.Koszt_zakupu > 200)))) {
+							zakup_kierunku(X, &chem_8);
+						}
+						else {
+							for (int i = 1; i <= 5; i++)
+							{
+								if ((IQ == 0 && (i * chem_8.Koszt_Budowy > X->Hajs)) || (IQ == 1 && chem_8.LiczbaBudynkow + i == 5) || (IQ == 2 && i * chem_8.Koszt_Budowy > X->Hajs + 100) && chem_8.Hotel == false)
+								{
+									zakup_budynek(X, Y, &chem_8, i - 1);
+								}
+								if ((((IQ == 0 || IQ == 2) && chem_8.LiczbaBudynkow + i == 5) && chem_8.Hotel == false) || (IQ == 1 && chem_8.LiczbaBudynkow == 4 && i == 1))
+								{
+									zakup_budynek(X, Y, &chem_8, i);
+								}
+							}
+						}
+
+					}
+				}
+				if (X->Polozenie == 33) {
+					if (biotech_8.GraczID == Y->ID)
+						zaplata(X, Y, &biotech_8); // automatyczna op³ata
+					else {
+						if (biotech_8.GraczID == 0 && (X->Hajs >= biotech_8.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - biotech_8.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - biotech_8.Koszt_zakupu > 200)))) {
+							zakup_kierunku(X, &biotech_8);
+						}
+						else {
+							for (int i = 1; i <= 5; i++)
+							{
+								if ((IQ == 0 && (i * biotech_8.Koszt_Budowy > X->Hajs)) || (IQ == 1 && biotech_8.LiczbaBudynkow + i == 5) || (IQ == 2 && i * biotech_8.Koszt_Budowy > X->Hajs + 100) && biotech_8.Hotel == false)
+								{
+									zakup_budynek(X, Y, &biotech_8, i - 1);
+								}
+								if ((((IQ == 0 || IQ == 2) && biotech_8.LiczbaBudynkow + i == 5) && biotech_8.Hotel == false) || (IQ == 1 && biotech_8.LiczbaBudynkow == 4 && i == 1))
+								{
+									zakup_budynek(X, Y, &biotech_8, i);
+								}
+							}
+						}
+
+					}
+				}
+				if (X->Polozenie == 34) {
+					loskarty(X, Y);
+				}
+				if (X->Polozenie == 35) {
+					if (tech_8.GraczID == Y->ID)
+						zaplata(X, Y, &tech_8); // automatyczna op³ata
+					else {
+						if (tech_8.GraczID == 0 && (X->Hajs >= tech_8.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - tech_8.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - tech_8.Koszt_zakupu > 200)))) {
+							zakup_kierunku(X, &tech_8);
+						}
+						else {
+							for (int i = 1; i <= 5; i++)
+							{
+								if ((IQ == 0 && (i * tech_8.Koszt_Budowy > X->Hajs)) || (IQ == 1 && tech_8.LiczbaBudynkow + i == 5) || (IQ == 2 && i * tech_8.Koszt_Budowy > X->Hajs + 100) && tech_8.Hotel == false)
+								{
+									zakup_budynek(X, Y, &tech_8, i - 1);
+								}
+								if ((((IQ == 0 || IQ == 2) && tech_8.LiczbaBudynkow + i == 5) && tech_8.Hotel == false) || (IQ == 1 && tech_8.LiczbaBudynkow == 4 && i == 1))
+								{
+									zakup_budynek(X, Y, &tech_8, i);
+								}
+							}
+						}
+
+					}
+				}
+				if (X->Polozenie == 36) {
+					if (el.IDGracz == Y->ID) {
+						zaplata_akademiki(X, Y, &el);
+					}
+					else {
+						if (el.IDGracz == 0)
+						{
+							if (el.KosztZakupu <= X->Hajs)
+							{
+								zakup_akademika(X, &el);
+							}
+						}
+						else
+						{
+							zaplata_akademiki(X, Y, &el);
+						}
+					}
+				}
+				if (X->Polozenie == 37) {
+					loskarty(X, Y);
+				}
+				if (X->Polozenie == 38) {
+					if (mat_9.GraczID == Y->ID)
+						zaplata(X, Y, &mat_9); // automatyczna op³ata
+					else {
+						if (mat_9.GraczID == 0 && (X->Hajs >= mat_9.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - mat_9.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - mat_9.Koszt_zakupu > 200)))) {
+							zakup_kierunku(X, &mat_9);
+						}
+						else {
+							for (int i = 1; i <= 5; i++)
+							{
+								if ((IQ == 0 && (i * mat_9.Koszt_Budowy > X->Hajs)) || (IQ == 1 && mat_9.LiczbaBudynkow + i == 5) || (IQ == 2 && i * mat_9.Koszt_Budowy > X->Hajs + 100) && mat_9.Hotel == false)
+								{
+									zakup_budynek(X, Y, &mat_9, i - 1);
+								}
+								if ((((IQ == 0 || IQ == 2) && mat_9.LiczbaBudynkow + i == 5) && mat_9.Hotel == false) || (IQ == 1 && mat_9.LiczbaBudynkow == 4 && i == 1))
+								{
+									zakup_budynek(X, Y, &mat_9, i);
+								}
+							}
+						}
+
+					}
+				}
+				if (X->Polozenie == 39) {
+					X->Hajs -= 100;
+				}
+				if (X->Polozenie == 40) {
+					if (inf_9.GraczID == Y->ID)
+						zaplata(X, Y, &inf_9); // automatyczna op³ata
+					else {
+						if (inf_9.GraczID == 0 && (X->Hajs >= inf_9.Koszt_zakupu) && ((IQ == 0) || (IQ == 1 && X->Hajs - inf_9.Koszt_zakupu > 100) || (IQ == 2 && (pomoc > 12 || X->Hajs - inf_9.Koszt_zakupu > 200)))) {
+							zakup_kierunku(X, &inf_9);
+						}
+						else {
+							for (int i = 1; i <= 5; i++)
+							{
+								if ((IQ == 0 && (i * inf_9.Koszt_Budowy > X->Hajs)) || (IQ == 1 && inf_9.LiczbaBudynkow + i == 5) || (IQ == 2 && i * inf_9.Koszt_Budowy > X->Hajs + 100) && inf_9.Hotel == false)
+								{
+									zakup_budynek(X, Y, &inf_9, i - 1);
+								}
+								if ((((IQ == 0 || IQ == 2) && inf_9.LiczbaBudynkow + i == 5) && inf_9.Hotel == false) || (IQ == 1 && inf_9.LiczbaBudynkow == 4 && i == 1))
+								{
+									zakup_budynek(X, Y, &inf_9, i);
+								}
+							}
+						}
+
+					}
+				}
+			}
 		}
 	}
 }

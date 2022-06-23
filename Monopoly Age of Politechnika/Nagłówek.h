@@ -41,6 +41,8 @@ class Gracz {
 public:
 	string nick ="";			//Nick Fury hehe
 	bool n = 0;
+	bool p = 0;
+	double s = 1.0;
 	int wiêzienie = 0;
 	int ID = 0;
 	int ilosc_domkow = 0;
@@ -85,4 +87,3 @@ void zakup_akademika(Gracz* X, Akademik* A);
 void zakup_alo(Gracz* X, ALO* A);
 void zaplata_akademiki(Gracz* Plac, Gracz* Otrz, Akademik* A);
 void zaplata_ALO(Gracz* Plac, Gracz* Otrz, ALO* A);
-void zakup_budynek(Gracz* X, Kierunek* K, int ile);

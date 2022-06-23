@@ -87,20 +87,11 @@ void zakup_kierunku(Gracz* X, Kierunek* K)
 }
 
 
-void sprzedawanie(Gracz* X, Kierunek* K)
-{
-	K->GraczID = 0;
-	K->Haracz = 0;
-	K->LiczbaBudynkow = 0;
-	X->Hajs += K->Wartosc_sprzedazy;
-	X->Akty_Wlasnosci[K->Wydzial] -= 1;
-	K->Wartosc_sprzedazy = 0;
-}
 
 void zaplata(Gracz* Plac, Gracz* Otrz, Kierunek* K)
 {
 	int pomoc = K->Haracz * (K->LiczbaBudynkow * 2 + K->Hotel * 6);
-	float mnoznik1, mnoznik2 = 1.0;
+	float mnoznik1 = 1.0, mnoznik2 = 1.0;
 	if (Plac->Akty_Wlasnosci[3] == 3)
 	{
 		mnoznik1 = 1 - ((K->LiczbaBudynkow * 0.05) + (K->Hotel * 0.3));
